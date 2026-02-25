@@ -3,8 +3,37 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Personal blog of Sourav Dutta - Thoughts on technology and design.">
+    <meta name="description" content="@yield('description', 'Personal blog of Sourav Dutta - Thoughts on technology, design, and software engineering.')">
+    
+    {{-- SEO Meta Tags --}}
+    <meta name="author" content="Sourav Dutta">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="{{ url()->current() }}">
+    
+    {{-- Open Graph / Facebook --}}
+    <meta property="og:type" content="@yield('og:type', 'website')">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:title" content="@yield('title', 'Sourav Dutta - Personal Blog')">
+    <meta property="og:description" content="@yield('description', 'Personal blog of Sourav Dutta - Thoughts on technology, design, and software engineering.')">
+    <meta property="og:image" content="@yield('og:image', asset('images/og-default.png'))">
+
+    {{-- Twitter --}}
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="{{ url()->current() }}">
+    <meta property="twitter:title" content="@yield('title', 'Sourav Dutta - Personal Blog')">
+    <meta property="twitter:description" content="@yield('description', 'Personal blog of Sourav Dutta - Thoughts on technology, design, and software engineering.')">
+    <meta property="twitter:image" content="@yield('og:image', asset('images/og-default.png'))">
+
+    {{-- Favicon --}}
+    {{-- <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"> --}}
+    {{-- <link rel="manifest" href="/site.webmanifest"> --}}
+
     <title>@yield('title', 'Sourav Dutta')</title>
+
+    {{-- Additional Meta from Views --}}
+    @yield('meta')
 
     {{-- Fonts: Inter (Google Fonts) --}}
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -29,6 +58,19 @@
     </script>
 </head>
 <body class="font-sans text-gray-900 bg-white dark:bg-black dark:text-zinc-200 antialiased min-h-screen flex flex-col transition-colors duration-300">
+    
+    {{-- Clean Minimal Noise Texture + Spotlight --}}
+    <div class="fixed inset-0 -z-10 w-full h-full bg-zinc-50 dark:bg-black">
+        {{-- 1. Noise Filter (creates paper/analog feel) --}}
+        <div class="absolute inset-0 opacity-[0.03] dark:opacity-[0.05] pointer-events-none mix-blend-multiply dark:mix-blend-overlay" 
+             style="background-image: url(&quot;data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E&quot;);">
+        </div>
+
+        {{-- 2. Subtle Glow Orbs (Soft ambient light) --}}
+        <div class="absolute -top-24 -left-24 w-96 h-96 bg-purple-200/40 dark:bg-purple-900/10 rounded-full blur-3xl opacity-50 dark:opacity-20 animate-pulse delay-75 mix-blend-multiply dark:mix-blend-screen"></div>
+        <div class="absolute top-1/4 -right-24 w-80 h-80 bg-blue-200/40 dark:bg-blue-900/10 rounded-full blur-3xl opacity-50 dark:opacity-20 animate-pulse mix-blend-multiply dark:mix-blend-screen"></div>
+        <div class="absolute bottom-0 left-1/3 w-full h-64 bg-linear-to-t from-white via-white/0 to-transparent dark:from-black dark:via-black/0 dark:to-transparent"></div>
+    </div>
 
     {{-- Navigation --}}
     <header class="w-full transition-colors duration-300 bg-white/80 dark:bg-black/80 backdrop-blur-md border-b border-gray-100 dark:border-white/10 sticky top-0 z-50 supports-backdrop-filter:bg-white/60 font-mono">

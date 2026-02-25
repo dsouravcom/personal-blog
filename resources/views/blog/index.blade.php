@@ -1,11 +1,36 @@
 @extends('layouts.app')
 
-@section('title', 'Sourav Dutta — ~/blog/readme.md')
+@section('title', 'Sourav Dutta — Software Engineer & Writer')
+@section('description', 'Join me as I explore software engineering, system design, and the art of programming. Articles, tutorials, and deep dives.')
+
+@section('meta')
+    <meta name="keywords" content="javascript, software engineering, web development, blog, sourav dutta">
+    
+    {{-- Schema.org --}}
+    <script type="application/ld+json">
+    {
+        "@@context": "https://schema.org",
+        "@@type": "WebSite",
+        "url": "{{ route('blog.index') }}",
+        "name": "Sourav Dutta",
+        "author": {
+            "@@type": "Person",
+            "name": "Sourav Dutta"
+        },
+        "description": "Personal blog about software engineering and web development.",
+        "potentialAction": {
+            "@@type": "SearchAction",
+            "target": "{{ route('blog.index') }}?q={search_term_string}",
+            "query-input": "required name=search_term_string"
+        }
+    }
+    </script>
+@endsection
 
 @section('content')
 
     {{-- Hero Section (Vim / Editor Style) --}}
-    <section class="mb-12 pt-8 pb-12 sm:pt-12 sm:pb-16 animate-fade-in border-b border-dashed border-zinc-200 dark:border-zinc-800 font-mono">
+    <section class="mb-6 pt-8 pb-12 sm:pt-12 sm:pb-16 animate-fade-in border-b border-dashed border-zinc-200 dark:border-zinc-800 font-mono">
         <div class="flex flex-col gap-6">
             
             {{-- Editor Tab --}}
@@ -68,18 +93,9 @@
 
         </div>
     </section>
-                
-                <div class="flex gap-3 text-lg md:text-xl items-center">
-                    <span class="text-green-500 font-bold">➜</span>
-                    <span class="text-cyan-600 dark:text-cyan-400 font-bold">~</span>
-                    <span class="w-3 h-6 bg-zinc-500/50 animate-pulse"></span>
-                </div>
-            </div>
-        </div>
-    </section>
 
     {{-- Posts List (File Directory Style) --}}
-    <section class="pb-6 pt-16 animate-fade-in delay-100 font-mono">
+    <section class="pb-6 animate-fade-in delay-100 font-mono">
         <div class="mb-8 flex items-center justify-between text-xs uppercase tracking-widest text-zinc-400 dark:text-zinc-500 border-b border-zinc-100 dark:border-zinc-800 pb-4 select-none">
             <span>Listing directory contents...</span>
             <span>{{ $posts->total() }} files found</span>
@@ -140,7 +156,7 @@
 
             {{-- Pagination --}}
             @if ($posts->hasPages())
-                <nav class="relative z-0 flex justify-between items-center w-full mt-24 pt-6 border-t border-dashed border-zinc-300 dark:border-zinc-700 font-mono text-sm selection:bg-zinc-900 selection:text-white dark:selection:bg-white dark:selection:text-zinc-900">
+                <nav class="relative z-0 flex justify-between items-center w-full pt-6 border-t border-dashed border-zinc-300 dark:border-zinc-700 font-mono text-sm selection:bg-zinc-900 selection:text-white dark:selection:bg-white dark:selection:text-zinc-900">
                     
                     {{-- Previous Page Link --}}
                     <div class="flex-1 flex justify-start">
