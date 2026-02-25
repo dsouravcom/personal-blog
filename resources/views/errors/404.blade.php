@@ -36,7 +36,7 @@
         <div class="relative group">
             
             {{-- The "Missing" Card --}}
-            <div class="relative bg-white dark:bg-[#0a0a0a] border-2 border-zinc-900 dark:border-zinc-100 p-8 md:p-12 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] dark:shadow-[8px_8px_0px_0px_rgba(255,255,255,1)] transition-transform duration-100 ease-linear hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[10px_10px_0px_0px_rgba(0,0,0,1)] dark:hover:shadow-[10px_10px_0px_0px_rgba(255,255,255,1)]">
+            <div class="relative bg-white dark:bg-[#0a0a0a] border-2 border-zinc-900 dark:border-zinc-100 p-8 md:p-12 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] dark:shadow-[8px_8px_0px_0px_rgba(255,255,255,1)] transition-transform duration-100 ease-linear hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[10px_10px_0px_0px_rgba(0,0,0,1)] dark:hover:shadow-[10px_10px_0px_0px_rgba(255,255,255,1)]">
                 
                 {{-- Decorative Corner Tags --}}
                 <div class="absolute -top-3 -left-3 bg-red-500 text-white text-xs font-bold px-2 py-1 uppercase tracking-widest border border-black dark:border-white">
@@ -104,7 +104,7 @@
                                     System Reboot
                                 </span>
                                 {{-- Button Hover Effect --}}
-                                <div class="absolute inset-0 bg-red-500 transform translate-y-full group-hover:translate-y-0 transition-transform duration-200 ease-out -z-0 mix-blend-difference"></div>
+                                <div class="absolute inset-0 bg-red-500 transform translate-y-full group-hover:translate-y-0 transition-transform duration-200 ease-out z-0 mix-blend-difference"></div>
                             </a>
                             
                             <button @click="history.back()" 

@@ -249,7 +249,7 @@
                        value="{{ old('tags', isset($post) && $post->exists ? $post->tags->pluck('name')->implode(',') : '') }}">
 
                 {{-- Visual container for selected tags --}}
-                <div id="tags_container" class="flex flex-wrap gap-2 mb-3 min-h-[30px] p-2 bg-[#050505] border border-gray-800 rounded">
+                <div id="tags_container" class="flex flex-wrap gap-2 mb-3 min-h-7.5 p-2 bg-[#050505] border border-gray-800 rounded">
                     {{-- Tags will be injected here by JS --}}
                 </div>
 

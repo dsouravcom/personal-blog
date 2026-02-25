@@ -170,7 +170,7 @@
             </div>
 
             <div class="flex items-center gap-4">
-                <span id="live-clock" class="text-gray-600 text-xs font-mono hidden sm:inline-block min-w-[180px]">
+                <span id="live-clock" class="text-gray-600 text-xs font-mono hidden sm:inline-block min-w-45">
                     {{-- JS populates this --}}
                     SYNCING...
                 </span>
