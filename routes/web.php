@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [BlogController::class, 'index'])->name('blog.index');
 Route::get('/posts/{slug}', [BlogController::class, 'show'])->name('blog.show');
 Route::get('/tags/{slug}', [TagController::class, 'show'])->name('blog.tag');
-Route::post('/subscribe', [SubscriberController::class, 'store'])->name('blog.subscribe');
+Route::post('/subscribe', [SubscriberController::class, 'store'])->name('blog.subscribe')->middleware('throttle:5,1');
 // Use the 'signed' middleware to ensure valid signature
 Route::get('/unsubscribe/{subscriber}', [SubscriberController::class, 'destroy'])
     ->name('blog.unsubscribe')
@@ -34,9 +34,9 @@ Route::post('/posts/{post}/like', [LikeController::class, 'toggle'])
 // ─── Admin auth ──────────────────────────────────────────────────────────────
 Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
-    Route::post('/login', [AuthController::class, 'login'])->name('login.post');
+    Route::post('/login', [AuthController::class, 'login'])->name('login.post')->middleware('throttle:5,1');
     Route::get('/verify-otp', [AuthController::class, 'showOtp'])->name('otp');
-    Route::post('/verify-otp', [AuthController::class, 'verifyOtp'])->name('otp.verify');
+    Route::post('/verify-otp', [AuthController::class, 'verifyOtp'])->name('otp.verify')->middleware('throttle:5,1');
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
     // ─── Protected admin routes ───────────────────────────────────────────

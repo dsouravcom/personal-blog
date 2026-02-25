@@ -12,6 +12,10 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->redirectGuestsTo(fn () => route('admin.login'));
+        // Append security headers to every web response
+        $middleware->append(\App\Http\Middleware\SecurityHeaders::class);
+        // Block malicious request patterns
+        $middleware->append(\App\Http\Middleware\BlockMaliciousRequests::class);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

@@ -11,8 +11,14 @@ class SubscriberController extends Controller
 {
     public function store(Request $request)
     {
+        // Honeypot: bots fill hidden field, humans leave it empty — silently discard
+        if ($request->filled('_hp_email')) {
+            return back()->with('subscribed', 'You have successfully subscribed!');
+        }
+
         $request->validate([
-            'email' => 'required|email:rfc,dns',
+            'email'    => 'required|email:rfc,dns|max:255',
+            '_hp_email' => 'nullable|max:0',
         ]);
 
         // Verify the domain has valid MX records (can actually receive mail)

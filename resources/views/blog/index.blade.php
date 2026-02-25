@@ -228,6 +228,8 @@
                 @else
                     <form action="{{ route('blog.subscribe') }}" method="POST" class="flex items-center gap-2 w-full">
                         @csrf
+                        {{-- Honeypot: hidden field that bots fill but humans don't --}}
+                        <input type="text" name="_hp_email" style="display:none !important;" tabindex="-1" autocomplete="off">
                         <div class="relative flex-1">
                             <span class="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400 text-xs">$</span>
                             <input
