@@ -18,5 +18,14 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->append(\App\Http\Middleware\BlockMaliciousRequests::class);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
-        //
+        $exceptions->render(function (\Illuminate\Http\Exceptions\ThrottleRequestsException $e, \Illuminate\Http\Request $request) {
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'message' => 'Whoa there! Please slow down. You are making too many requests.',
+                    'retry_after' => $e->getHeaders()['Retry-After'] ?? 60,
+                ], 429);
+            }
+            
+            return response()->view('errors.429', [], 429);
+        });
     })->create();
