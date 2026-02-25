@@ -35,6 +35,8 @@ Route::post('/posts/{post}/like', [LikeController::class, 'toggle'])
 Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
     Route::post('/login', [AuthController::class, 'login'])->name('login.post');
+    Route::get('/verify-otp', [AuthController::class, 'showOtp'])->name('otp');
+    Route::post('/verify-otp', [AuthController::class, 'verifyOtp'])->name('otp.verify');
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
     // ─── Protected admin routes ───────────────────────────────────────────
