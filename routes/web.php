@@ -16,6 +16,7 @@ Route::middleware('throttle:read.content')->group(function () {
     Route::get('/', [BlogController::class, 'index'])->name('blog.index');
     Route::get('/posts/{slug}', [BlogController::class, 'show'])->name('blog.show');
     Route::get('/tags/{slug}', [TagController::class, 'show'])->name('blog.tag');
+    Route::get('/sitemap.xml', [BlogController::class, 'sitemap'])->name('blog.sitemap');
 });
 
 Route::post('/subscribe', [SubscriberController::class, 'store'])

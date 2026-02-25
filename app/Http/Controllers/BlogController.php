@@ -38,4 +38,13 @@ class BlogController extends Controller
 
         return view('blog.show', compact('post', 'viewCount', 'userLiked'));
     }
+
+    public function sitemap()
+    {
+        $posts = \App\Models\Post::where('is_published', true)->orderBy('updated_at', 'desc')->get();
+
+        return response()->view('sitemap', [
+            'posts' => $posts,
+        ])->header('Content-Type', 'text/xml');
+    }
 }
