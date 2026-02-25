@@ -170,7 +170,10 @@
             </div>
 
             <div class="flex items-center gap-4">
-                <span class="text-gray-600 text-xs font-mono hidden sm:inline-block">SERVER_TIME: {{ now()->format('Y-m-d H:i:s T') }}</span>
+                <span id="live-clock" class="text-gray-600 text-xs font-mono hidden sm:inline-block min-w-[180px]">
+                    {{-- JS populates this --}}
+                    SYNCING...
+                </span>
                  <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-green-900/20 text-green-500 border border-green-900/50">
                     <span class="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
                     ONLINE
@@ -209,5 +212,24 @@
         </main>
     </div>
 
+    <script>
+        function updateClock() {
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const day = String(now.getDate()).padStart(2, '0');
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            
+            // Format: YYYY-MM-DD HH:MM:SS
+            const timeString = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+            document.getElementById('live-clock').innerText = 'LOCAL_TIME: ' + timeString;
+        }
+        
+        // Update immediately then every second
+        updateClock();
+        setInterval(updateClock, 1000);
+    </script>
 </body>
 </html>

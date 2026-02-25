@@ -242,16 +242,38 @@
             </h3>
             
             <div class="group">
-                <label for="tags" class="block text-xs font-mono text-gray-500 mb-1 ml-1 group-focus-within:text-primary-400 transition-colors">TAG_INDEX</label>
-                <div class="relative">
-                    <input type="text" 
-                           name="tags" 
-                           id="tags" 
-                           {{-- Convert BelongsToMany tags to comma-separated string --}}
-                           value="{{ old('tags', isset($post) && $post->exists ? $post->tags->pluck('name')->implode(', ') : '') }}"
-                           class="w-full bg-[#050505] border border-gray-800 rounded p-3 text-gray-300 text-sm font-mono focus:border-primary-500 outline-none placeholder-gray-800"
-                           placeholder="encryption, network, zero-day">
-                    <p class="text-[10px] text-gray-600 mt-1 font-mono">Separate keys with commas</p>
+                <label class="block text-xs font-mono text-gray-500 mb-1 ml-1 group-focus-within:text-primary-400 transition-colors">TAG_INDEX</label>
+                
+                {{-- Hidden input stores the actual comma-separated values sent to server --}}
+                <input type="hidden" name="tags" id="tags_hidden" 
+                       value="{{ old('tags', isset($post) && $post->exists ? $post->tags->pluck('name')->implode(',') : '') }}">
+
+                {{-- Visual container for selected tags --}}
+                <div id="tags_container" class="flex flex-wrap gap-2 mb-3 min-h-[30px] p-2 bg-[#050505] border border-gray-800 rounded">
+                    {{-- Tags will be injected here by JS --}}
+                </div>
+
+                <div class="flex flex-col gap-2">
+                    {{-- Dropdown for existing tags --}}
+                    <select id="tags_select" class="w-full bg-[#050505] border border-gray-800 rounded p-2 text-gray-300 text-xs font-mono focus:border-primary-500 outline-none">
+                        <option value="">[ SELECT_EXISTING_TAG ]</option>
+                        @foreach($allTags as $tag)
+                            <option value="{{ $tag->name }}">{{ $tag->name }}</option>
+                        @endforeach
+                    </select>
+
+                    {{-- Manual entry + Add Button --}}
+                    <div class="flex gap-2">
+                        <input type="text" id="tags_input" 
+                               class="flex-1 bg-[#050505] border border-gray-800 rounded p-2 text-gray-300 text-xs font-mono focus:border-primary-500 outline-none placeholder-gray-700"
+                               placeholder="Or type new tag..."
+                               onkeydown="if(event.key === 'Enter'){ event.preventDefault(); addTag(); }">
+                        
+                        <button type="button" onclick="addTag()" 
+                                class="px-3 py-1 bg-gray-800 hover:bg-primary-500 hover:text-black text-gray-300 text-xs font-mono rounded transition-colors border border-gray-700">
+                           + ADD
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -293,7 +315,7 @@
                         <input type="file" id="cover_image_file" class="sr-only" accept="image/*">
 
                         {{-- Loader overlay shown while the file is uploading to R2 --}}
-                        <div id="cover-upload-loader" class="absolute inset-0 bg-[#050505]/90 rounded flex items-center justify-center gap-2">
+                        <div id="cover-upload-loader" class="hidden absolute inset-0 bg-[#050505]/90 rounded flex items-center justify-center gap-2">
                             <svg class="animate-spin w-4 h-4 text-primary-400" fill="none" viewBox="0 0 24 24">
                                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                                 <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
@@ -523,4 +545,95 @@
         document.getElementById('og_image_file').value    = '';
         document.getElementById('og-upload-status').classList.add('hidden');
     }
+
+    // ─── Tag Management Logic ───────────────────────────────────────────────
+    
+    // State: Set of unique tag names
+    const tagsSet = new Set();
+    const tagsHiddenInput = document.getElementById('tags_hidden');
+    const tagsContainer   = document.getElementById('tags_container');
+    const tagsSelect      = document.getElementById('tags_select');
+    const tagsInput       = document.getElementById('tags_input');
+
+    function renderTags() {
+        tagsContainer.innerHTML = '';
+        if (tagsSet.size === 0) {
+            tagsContainer.innerHTML = '<span class="text-gray-600 text-xs italic p-1 font-mono">// NO_TAGS_SELECTED</span>';
+        } else {
+            tagsSet.forEach(tag => {
+                const badge = document.createElement('span');
+                badge.className = 'inline-flex items-center gap-1 px-2 py-1 bg-gray-900 text-primary-400 text-xs font-mono rounded border border-gray-700 hover:border-red-500 transition-colors group cursor-pointer';
+                badge.title = 'Click to remove';
+                badge.onclick = () => removeTag(tag);
+                badge.innerHTML = `
+                    <span class="text-gray-500">#</span>${tag} 
+                    <span class="text-gray-600 group-hover:text-red-500 ml-1">×</span>
+                `;
+                tagsContainer.appendChild(badge);
+            });
+        }
+
+        // Update hidden input sent to server
+        tagsHiddenInput.value = Array.from(tagsSet).join(',');
+    }
+
+    function addTag() {
+        // Try getting value from select first, then text input
+        const selectVal = tagsSelect.value;
+        const textVal   = tagsInput.value;
+        
+        let val = selectVal || textVal;
+        
+        if (val) {
+            // Split by comma in case user pasted multiple
+            val.split(',').forEach(v => {
+                const clean = v.trim();
+                if (clean) tagsSet.add(clean);
+            });
+            
+            renderTags();
+            
+            // Reset inputs
+            tagsSelect.value = '';
+            tagsInput.value = '';
+            if (textVal) tagsInput.focus(); // Keep focus if user was typing
+        }
+    }
+
+    // Initialize from hidden input (populated by PHP)
+    if (tagsHiddenInput.value) {
+        tagsHiddenInput.value.split(',').forEach(t => {
+            const clean = t.trim();
+            if (clean) tagsSet.add(clean);
+        });
+        renderTags();
+    } else {
+        renderTags(); // Show empty state
+    }
+
+    // Expose remove function to global scope
+    window.removeTag = function(tag) {
+        tagsSet.delete(tag);
+        renderTags();
+    };
+
+    // Auto-add when dropdown changes
+    if (tagsSelect) {
+        tagsSelect.addEventListener('change', function() {
+            if (this.value) {
+                addTag();
+            }
+        });
+    }
+    
+    // Allow pressing Enter in text input to add
+    if (tagsInput) {
+        tagsInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault(); // Prevent form submission
+                addTag();
+            }
+        });
+    }
+
 </script>

@@ -84,7 +84,8 @@ class PostController extends Controller
 
     public function create()
     {
-        return view('admin.posts.create');
+        $allTags = Tag::orderBy('name')->get();
+        return view('admin.posts.create', compact('allTags'));
     }
 
     // ─── Store (new post) ────────────────────────────────────────────────────
@@ -156,7 +157,8 @@ class PostController extends Controller
     public function edit(Post $post)
     {
         $post->load('tags');
-        return view('admin.posts.edit', compact('post'));
+        $allTags = Tag::orderBy('name')->get();
+        return view('admin.posts.edit', compact('post', 'allTags'));
     }
 
     // ─── Update (existing post) ──────────────────────────────────────────────

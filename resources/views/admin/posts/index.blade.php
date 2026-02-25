@@ -112,8 +112,8 @@
         </div>
         
         @if($posts->hasPages())
-        <div class="px-6 py-4 border-t border-gray-800 bg-gray-900/20">
-            {{ $posts->links() }} 
+        <div class="px-0 py-0 border-t border-gray-800 bg-gray-900/20">
+            {{ $posts->links('pagination.admin') }} 
         </div>
         @endif
     @endif
