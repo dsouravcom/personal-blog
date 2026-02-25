@@ -23,22 +23,54 @@ class SubscriberController extends Controller
                 ->withInput();
         }
 
-        // If subscriber already exists, return success without doing anything
-        if (Subscriber::where('email', $request->email)->exists()) {
-            return back()->with('subscribed', 'You have successfully subscribed!');
+        // If subscriber already exists
+        $subscriber = Subscriber::where('email', $request->email)->first();
+
+        if ($subscriber) {
+            // If they had previously unsubscribed, resubscribe them
+            if ($subscriber->unsubscribed_at) {
+                $subscriber->update(['unsubscribed_at' => null]);
+                
+                // Send confirmation email again
+                try {
+                    Mail::to($request->email)->send(new SubscriptionConfirmed($subscriber));
+                } catch (\Exception $e) {
+                    logger()->error('Resubscription email failed: ' . $e->getMessage());
+                }
+
+                return back()->with('subscribed', 'Welcome back! You have fully resubscribed.');
+            }
+
+            // Otherwise, just tell them they are already subscribed
+            return back()->with('subscribed', 'You are already subscribed!');
         }
 
-        Subscriber::create(['email' => $request->email]);
+        $subscriber = Subscriber::create(['email' => $request->email]);
 
         // Send confirmation email via SMTP
         try {
-            Mail::to($request->email)->send(new SubscriptionConfirmed($request->email));
+            Mail::to($request->email)->send(new SubscriptionConfirmed($subscriber));
         } catch (\Exception $e) {
             // Log the failure but don't break the subscription flow
             logger()->error('Subscription email failed: ' . $e->getMessage());
         }
 
         return back()->with('subscribed', 'You have successfully subscribed!');
+    }
+
+    /**
+     * Unsubscribe the user from the newsletter.
+     * This route should be signed to prevent unauthorized unsubscriptions.
+     */
+    public function destroy(Request $request, Subscriber $subscriber)
+    {
+        if (! $request->hasValidSignature()) {
+            abort(403, 'Invalid or expired unsubscribe link.');
+        }
+
+        $subscriber->update(['unsubscribed_at' => now()]);
+
+        return view('blog.unsubscribed', ['email' => $subscriber->email]);
     }
 
     /**

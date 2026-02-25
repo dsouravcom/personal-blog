@@ -8,98 +8,150 @@
         body {
             margin: 0;
             padding: 0;
-            background-color: #f3f4f6;
-            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-            color: #1f2937;
+            background-color: #f4f4f5; /* zinc-100 */
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+            color: #18181b; /* zinc-900 */
+            -webkit-font-smoothing: antialiased;
         }
         .wrapper {
-            max-width: 560px;
-            margin: 48px auto;
+            max-width: 600px;
+            margin: 40px auto;
             background: #ffffff;
-            border-radius: 12px;
+            border: 1px solid #e4e4e7; /* zinc-200 */
+            border-radius: 8px;
             overflow: hidden;
-            border: 1px solid #e5e7eb;
         }
         .header {
-            background-color: #4f46e5;
-            padding: 36px 40px;
-            text-align: center;
-        }
-        .header h1 {
-            margin: 0;
-            color: #ffffff;
-            font-size: 22px;
-            font-weight: 700;
-            letter-spacing: -0.3px;
-        }
-        .body {
-            padding: 36px 40px;
-        }
-        .body p {
-            margin: 0 0 16px;
-            font-size: 15px;
-            line-height: 1.65;
-            color: #374151;
-        }
-        .body p:last-child { margin-bottom: 0; }
-        .highlight {
-            background: #eef2ff;
-            border-left: 3px solid #4f46e5;
-            border-radius: 6px;
-            padding: 14px 18px;
-            margin: 24px 0;
+            background-color: #18181b; /* zinc-900 */
+            padding: 24px;
+            color: #e4e4e7; /* zinc-200 */
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
             font-size: 14px;
-            color: #3730a3;
-            font-style: italic;
+        }
+        .terminal-dots {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 16px;
+        }
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: #3f3f46; /* zinc-700 */
+        }
+        .command-line {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .prompt {
+            color: #a1a1aa; /* zinc-400 */
+        }
+        .cursor {
+            display: inline-block;
+            width: 8px;
+            height: 16px;
+            background-color: #ffffff;
+            animation: blink 1s step-end infinite;
+        }
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+        .content {
+            padding: 40px;
+            line-height: 1.7;
+        }
+        h1 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-top: 0;
+            margin-bottom: 24px;
+            border-bottom: 1px dashed #e4e4e7;
+            padding-bottom: 16px;
+        }
+        p {
+            margin: 0 0 16px;
+            color: #3f3f46; /* zinc-700 */
         }
         .btn {
             display: inline-block;
-            margin-top: 24px;
-            background-color: #4f46e5;
+            margin-top: 16px;
+            background-color: #18181b; /* zinc-900 */
             color: #ffffff !important;
             text-decoration: none;
             font-size: 14px;
-            font-weight: 600;
+            font-weight: 500;
             padding: 12px 24px;
-            border-radius: 8px;
+            border-radius: 4px;
+            font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+        .btn:hover {
+            background-color: #27272a; /* zinc-800 */
         }
         .footer {
-            border-top: 1px solid #e5e7eb;
+            background-color: #fafafa; /* zinc-50 */
             padding: 24px 40px;
-            text-align: center;
+            border-top: 1px solid #e4e4e7; /* zinc-200 */
             font-size: 12px;
-            color: #9ca3af;
-            background: #f9fafb;
+            color: #a1a1aa; /* zinc-400 */
+            text-align: center;
         }
-        .footer a { color: #6b7280; text-decoration: none; }
+        .footer a {
+            color: #71717a; /* zinc-500 */
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
     <div class="wrapper">
         <div class="header">
-            <h1>{{ config('app.name') }}</h1>
-        </div>
-        <div class="body">
-            <p>Hey there 👋</p>
-            <p>
-                You're now subscribed to <strong>{{ config('app.name') }}</strong>. 
-                I'll send you a note whenever I publish something new — no spam, ever.
-            </p>
-            <div class="highlight">
-                "The best time to start writing was yesterday. The second best time is right now."
+            <!-- Mock Terminal Header -->
+            <div style="display:flex; gap:6px; margin-bottom:12px;">
+                <span style="width:10px; height:10px; border-radius:50%; background:#ef4444;"></span>
+                <span style="width:10px; height:10px; border-radius:50%; background:#eab308;"></span>
+                <span style="width:10px; height:10px; border-radius:50%; background:#22c55e;"></span>
             </div>
-            <p>
-                In the meantime, feel free to browse the latest posts on the blog.
-            </p>
-            <a href="{{ config('app.url') }}" class="btn">Browse Posts &rarr;</a>
+            <div class="command-line">
+                <span style="color: #22c55e;">➜</span>
+                <span style="color: #60a5fa;">~</span>
+                <span class="prompt">/blog $</span>
+                <span>./cat welcome_message.txt</span>
+            </div>
         </div>
-        <div class="footer">
+        
+        <div class="content">
+            <h1>Success: Subscription Confirmed</h1>
+            
+            <p><strong>Hello!</strong></p>
+            
             <p>
-                You're receiving this because you subscribed at 
-                <a href="{{ config('app.url') }}">{{ parse_url(config('app.url'), PHP_URL_HOST) }}</a>.
+                You have successfully subscribed to <strong>{{ config('app.name') }}</strong>. 
+                Consider this the initial commit to our correspondence.
             </p>
-            <p style="margin-top:8px;">
-                This email was sent to <strong>{{ $email }}</strong>.
+            
+            <p>
+                I'll push updates to your inbox whenever I publish new content on technology, design, and code.
+                No spam, no bloat, just the source.
+            </p>
+
+            <br>
+            
+            <a href="{{ config('app.url') }}" class="btn">
+                <span style="margin-right: 6px;">>_</span> Return to Home
+            </a>
+        </div>
+
+        <div class="footer">
+            @php $host = parse_url(config('app.url'), PHP_URL_HOST); @endphp
+            <p>
+                Sent from the {{ $host }} server.<br>
+                You subscribed with <strong>{{ $subscriber->email }}</strong>.
+            </p>
+            <p style="margin-top: 12px;">
+                <a href="{{ config('app.url') }}">Visit Website</a>
+                <span style="color: #d4d4d8; margin: 0 8px;">|</span>
+                <a href="{{ URL::signedRoute('blog.unsubscribe', ['subscriber' => $subscriber->id]) }}">Unsubscribe</a>
             </p>
         </div>
     </div>

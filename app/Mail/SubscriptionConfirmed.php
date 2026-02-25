@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+use App\Models\Subscriber;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
@@ -12,7 +13,7 @@ class SubscriptionConfirmed extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public function __construct(public string $email) {}
+    public function __construct(public Subscriber $subscriber) {}
 
     public function envelope(): Envelope
     {

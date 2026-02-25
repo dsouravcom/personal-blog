@@ -16,6 +16,10 @@ Route::get('/', [BlogController::class, 'index'])->name('blog.index');
 Route::get('/posts/{slug}', [BlogController::class, 'show'])->name('blog.show');
 Route::get('/tags/{slug}', [TagController::class, 'show'])->name('blog.tag');
 Route::post('/subscribe', [SubscriberController::class, 'store'])->name('blog.subscribe');
+// Use the 'signed' middleware to ensure valid signature
+Route::get('/unsubscribe/{subscriber}', [SubscriberController::class, 'destroy'])
+    ->name('blog.unsubscribe')
+    ->middleware('signed');
 
 // Comments (throttled: 3 per minute per IP)
 Route::post('/posts/{post}/comments', [CommentController::class, 'store'])
