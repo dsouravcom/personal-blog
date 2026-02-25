@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.app', ['maxWidth' => 'max-w-6xl', 'py' => 'py-6'])
 
 @section('title', ($post->meta_title ?: $post->title) . ' — Sourav Dutta')
 
@@ -50,7 +50,58 @@
 
 @section('content')
 
-<article class="max-w-3xl mx-auto py-12 md:py-20 animate-fade-in">
+<style>
+    /* Enhanced Code Block Scrollbar */
+    .prose pre {
+        overflow-x: auto !important;
+        white-space: pre !important; 
+        max-width: 100% !important;
+        padding: 1rem !important;
+        border-radius: 0.5rem;
+        /* Scrollbar styles */
+        scrollbar-width: thin;
+        scrollbar-color: #52525b #27272a;
+    }
+    /* Webkit Scrollbar */
+    .prose pre::-webkit-scrollbar {
+        height: 6px;
+        background-color: transparent;
+    }
+    .prose pre::-webkit-scrollbar-track {
+        background-color: rgba(255, 255, 255, 0.05);
+        border-radius: 0 0 0.5rem 0.5rem;
+    }
+    .prose pre::-webkit-scrollbar-thumb {
+        background-color: #52525b; /* zinc-600 */
+        border-radius: 3px;
+    }
+    .prose pre::-webkit-scrollbar-thumb:hover {
+        background-color: #71717a; /* zinc-500 */
+    }
+    /* Ensure code text doesn't wrap awkwardly */
+    .prose pre code {
+        display: inline-block;
+        min-width: 100%;
+        font-family: 'JetBrains Mono', monospace !important;
+        font-size: 0.9em;
+    }
+</style>
+
+<article class="w-full max-w-5xl mx-auto pb-12 md:pb-20 animate-fade-in">
+
+    {{-- Featured Image (Top Placement) --}}
+    @if($post->cover_image)
+        <figure class="mb-8 rounded-xl overflow-hidden bg-zinc-100 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 shadow-sm">
+            <img src="{{ $post->cover_image }}"
+                 alt="{{ $post->cover_image_alt ?? $post->title }}"
+                 class="w-full h-auto max-h-[600px] object-cover hover:scale-[1.02] transition-transform duration-700 ease-out">
+            @if($post->cover_image_caption)
+                <figcaption class="text-center text-xs text-zinc-400 py-3 bg-zinc-50 dark:bg-zinc-900 border-t border-zinc-200 dark:border-zinc-700 font-mono">
+                    // {{ $post->cover_image_caption }}
+                </figcaption>
+            @endif
+        </figure>
+    @endif
 
     {{-- Back link --}}
     <div class="mb-8 font-mono">
@@ -110,26 +161,11 @@
         @endif
     </header>
 
-    {{-- Featured Image --}}
-    @if($post->cover_image)
-        <figure class="mb-12 rounded overflow-hidden bg-zinc-100 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700">
-            {{-- cover_image is the full public R2 URL — no asset() wrapper needed --}}
-            <img src="{{ $post->cover_image }}"
-                 alt="{{ $post->cover_image_alt ?? $post->title }}"
-                 class="w-full h-auto object-cover opacity-90 hover:opacity-100 transition-opacity">
-            @if($post->cover_image_caption)
-                <figcaption class="text-center text-xs text-zinc-400 py-2 font-mono">
-                    // {{ $post->cover_image_caption }}
-                </figcaption>
-            @endif
-        </figure>
-    @endif
-
     <div class="w-full border-t border-dashed border-zinc-200 dark:border-zinc-800 mb-12"></div>
 
     {{-- Post Body --}}
     <div class="prose prose-lg dark:prose-invert max-w-none 
-        font-sans leading-relaxed
+        font-mono leading-relaxed
         prose-headings:font-bold prose-headings:tracking-tight prose-headings:text-zinc-900 dark:prose-headings:text-white
         prose-a:text-blue-600 dark:prose-a:text-blue-400 prose-a:underline prose-a:decoration-dotted prose-a:underline-offset-4 hover:prose-a:decoration-solid
         prose-img:rounded prose-img:border prose-img:border-zinc-200 dark:prose-img:border-zinc-800

@@ -59,27 +59,106 @@
              @error('excerpt') <p class="text-red-500 text-xs mt-1 font-mono">{{ $message }}</p> @enderror
         </div>
 
-        {{-- Content Editor --}}
+        {{-- Content Editor (TipTap - Build Version) --}}
         <div class="group">
             <div class="flex items-center justify-between mb-1 ml-1">
                 <label for="content" class="block text-xs font-mono text-gray-500 group-focus-within:text-primary-400 transition-colors">>> MAIN_CONTENT_BLOCK <span class="text-red-500">*</span></label>
                 <div class="text-[10px] text-gray-600 font-mono border border-gray-800 px-2 py-0.5 rounded">
-                    MODE: MARKDOWN/HTML
+                    MODE: WYSIWYG
                 </div>
             </div>
-            <div class="relative">
-                <div class="absolute left-0 top-0 bottom-0 w-8 bg-[#050505] border-r border-gray-800 flex flex-col items-center pt-4 text-[10px] text-gray-700 font-mono select-none overflow-hidden">
-                    <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>...</span>
+            
+            <div class="bg-[#0a0a0a] border border-gray-800 rounded overflow-hidden focus-within:border-primary-500 focus-within:ring-1 focus-within:ring-primary-500 transition-all">
+                
+                {{-- Toolbar --}}
+                <div id="tiptap-toolbar" class="flex flex-wrap gap-1 p-2 border-b border-gray-800 bg-[#050505]">
+                    <!-- Buttons injected by JS -->
                 </div>
-                <textarea name="content" 
-                          id="content" 
-                          rows="20" 
-                          class="w-full bg-[#0a0a0a] border border-gray-800 rounded p-4 pl-10 text-gray-300 placeholder-gray-800 font-mono text-sm leading-relaxed focus:border-primary-500 focus:ring-1 focus:ring-primary-500 transition-all outline-none"
-                          placeholder="Initialize transmission content..."
-                          required>{{ old('content', $post->content ?? '') }}</textarea>
+
+                {{-- Editor Content (Visual) --}}
+                <div id="tiptap-editor" class="min-h-[500px] text-gray-300 font-mono focus:outline-none"></div>
+                
+                {{-- Hidden input to store value --}}
+                <input type="hidden" name="content" id="content" value="{{ old('content', $post->content ?? '') }}" required>
             </div>
+
             @error('content') <p class="text-red-500 text-xs mt-1 font-mono">{{ $message }}</p> @enderror
         </div>
+
+        <script>
+            // Pass routes to the external JS file
+            window.UPLOAD_URL = "{{ route('admin.posts.upload-image') }}";
+        </script>
+        {{-- Load the bundled editor script --}}
+        @vite('resources/js/admin/post-editor.js')
+        
+        <style>
+            /* Basic TipTap Styles */
+            .ProseMirror { outline: none !important; min-height: 500px; padding: 1rem; }
+            .ProseMirror p.is-editor-empty:first-child::before {
+                content: attr(data-placeholder);
+                float: left;
+                color: #374151;
+                pointer-events: none;
+                height: 0;
+            }
+            /* Code Block Styles */
+            .ProseMirror pre {
+                background: #111;
+                border-radius: 0.5rem;
+                color: #e5e7eb;
+                font-family: 'JetBrains Mono', monospace;
+                padding: 0.75rem 1rem;
+                border: 1px solid #374151;
+                overflow-x: auto;
+            }
+            .ProseMirror code {
+                color: #ec4899;
+                background-color: rgba(255, 255, 255, 0.1);
+                padding: 0.1em 0.3em;
+                border-radius: 0.2em;
+                font-family: 'JetBrains Mono', monospace;
+            } 
+            .ProseMirror pre code {
+                color: inherit;
+                background-color: transparent;
+                padding: 0;
+            }
+            /* Blockquote */
+            .ProseMirror blockquote {
+                border-left: 2px solid #3b82f6;
+                padding-left: 1rem;
+                font-style: italic;
+                color: #9ca3af;
+            }
+            /* Images */
+            .ProseMirror img {
+                max-width: 100%;
+                height: auto;
+                border-radius: 0.5rem;
+                border: 1px solid #374151;
+            }
+            .ProseMirror img.ProseMirror-selectednode {
+                outline: 2px solid #3b82f6;
+            }
+
+            /* Typography Fixes for Tailwind Reset */
+            .ProseMirror h1 { font-size: 2em; font-weight: 800; margin-top: 1.5em; margin-bottom: 0.5em; color: white; line-height: 1.2; }
+            .ProseMirror h2 { font-size: 1.5em; font-weight: 700; margin-top: 1.5em; margin-bottom: 0.5em; color: #f3f4f6; line-height: 1.3; }
+            .ProseMirror h3 { font-size: 1.25em; font-weight: 600; margin-top: 1em; margin-bottom: 0.5em; color: #e5e7eb; line-height: 1.4; }
+            
+            .ProseMirror ul, .ProseMirror ol { padding-left: 1.5rem; margin-bottom: 1rem; list-style-position: outside; }
+            .ProseMirror ul { list-style-type: disc; }
+            .ProseMirror ol { list-style-type: decimal; }
+            .ProseMirror li { margin-bottom: 0.25rem; }
+            
+            .ProseMirror strong, .ProseMirror b { font-weight: 700; color: #fff; }
+            .ProseMirror em, .ProseMirror i { font-style: italic; color: #d1d5db; }
+            
+            .ProseMirror p { margin-bottom: 1rem; line-height: 1.75; }
+            .ProseMirror a { color: #60a5fa; text-decoration: underline; text-underline-offset: 4px; }
+            .ProseMirror hr { margin: 2rem 0; border: 0; border-top: 1px solid #374151; }
+        </style>
 
         {{-- ADVANCED CONFIGURATION SECTION --}}
         <div class="border-t-2 border-dashed border-gray-800 pt-8 mt-12 mb-8">

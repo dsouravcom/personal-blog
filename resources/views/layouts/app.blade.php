@@ -32,7 +32,7 @@
 
     {{-- Navigation --}}
     <header class="w-full transition-colors duration-300 bg-white/80 dark:bg-black/80 backdrop-blur-md border-b border-gray-100 dark:border-white/10 sticky top-0 z-50 supports-backdrop-filter:bg-white/60 font-mono">
-        <div class="max-w-4xl mx-auto px-4 sm:px-6 h-16 flex justify-between items-center">
+        <div class="{{ $maxWidth ?? 'max-w-6xl' }} mx-auto px-4 sm:px-6 h-16 flex justify-between items-center">
             
             {{-- Brand / Terminal --}}
             <a href="{{ route('blog.index') }}" class="group flex items-center gap-2 focus:outline-none">
@@ -92,13 +92,13 @@
     </header>
 
     {{-- Main Content --}}
-    <main class="w-full max-w-4xl mx-auto grow px-4 sm:px-6 py-12 animate-fade-in">
+    <main class="w-full {{ $maxWidth ?? 'max-w-6xl' }} mx-auto grow px-4 sm:px-6 {{ $py ?? 'py-12' }} animate-fade-in">
         @yield('content')
     </main>
 
     {{-- Clean Footer --}}
     <footer class="w-full border-t border-zinc-200 dark:border-zinc-800 py-8 bg-zinc-50/50 dark:bg-black/90 transition-colors duration-300 mt-auto backdrop-blur-sm font-mono text-xs">
-        <div class="max-w-4xl mx-auto px-4 sm:px-6 flex flex-col md:flex-row justify-between items-center gap-4">
+        <div class="{{ $maxWidth ?? 'max-w-6xl' }} mx-auto px-4 sm:px-6 flex flex-col md:flex-row justify-between items-center gap-4">
             <div class="text-zinc-500 dark:text-zinc-500 flex items-center gap-2">
                 <span class="text-green-500">➜</span>
                 <span>// {{ date('Y') }} Sourav Dutta. Built with Laravel & Caffeine.</span>
