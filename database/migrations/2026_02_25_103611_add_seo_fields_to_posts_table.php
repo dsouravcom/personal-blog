@@ -21,7 +21,7 @@ return new class extends Migration
             // Social Media (Open Graph / Twitter Card)
             $table->string('og_title')->nullable()->after('canonical_url');
             $table->text('og_description')->nullable()->after('og_title');
-            $table->string('og_image')->nullable()->after('og_description'); // Custom social image
+            // og_image & og_image_r2_key already exist from create_posts_table
 
             // Image Metadata (to go with cover_image)
             $table->string('cover_image_alt')->nullable()->after('cover_image'); 
@@ -46,7 +46,6 @@ return new class extends Migration
                 'canonical_url',
                 'og_title',
                 'og_description',
-                'og_image',
                 'cover_image_alt',
                 'cover_image_caption',
                 'tags',
