@@ -143,10 +143,11 @@
         </div>
 
         <div class="footer">
-            @php $host = parse_url(config('app.url'), PHP_URL_HOST); @endphp
             <p>
-                Sent from the {{ $host }} server.<br>
-                You subscribed with <strong>{{ $subscriber->email }}</strong>.
+                This email was sent to <strong>{{ $subscriber->email }}</strong> because you subscribed to specific updates from Sourav Dutta's Personal Blog.
+            </p>
+            <p style="margin-top: 12px; color: #71717a;">
+                &copy; {{ date('Y') }} Sourav Dutta. All rights reserved.
             </p>
             <p style="margin-top: 12px;">
                 <a href="{{ config('app.url') }}">Visit Website</a>

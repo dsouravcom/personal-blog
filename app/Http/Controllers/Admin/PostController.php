@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Jobs\SendPostPublishedNotifications;
 use App\Models\Post;
 use App\Models\Tag;
 use App\Services\R2ImageService;
@@ -149,6 +150,11 @@ class PostController extends Controller
         // Sync tags: find or create each tag by name, then link to this post
         $post->tags()->sync($this->resolveTagIds($request->input('tags')));
 
+        // Notify subscribers if the post is published immediately
+        if ($post->is_published) {
+            SendPostPublishedNotifications::dispatch($post);
+        }
+
         return redirect()->route('admin.posts.index')->with('success', 'Post created successfully!');
     }
 
@@ -231,9 +237,17 @@ class PostController extends Controller
             unset($data['og_image'], $data['og_image_r2_key']);
         }
 
+        // Capture publication state before the update
+        $wasPublished = (bool) $post->getOriginal('is_published');
+
         $post->update($data);
 
         $post->tags()->sync($this->resolveTagIds($request->input('tags')));
+
+        // Notify subscribers only on the *first* publish (not on every save)
+        if (!$wasPublished && $post->is_published) {
+            SendPostPublishedNotifications::dispatch($post);
+        }
 
         return redirect()->route('admin.posts.index')->with('success', 'Post updated successfully!');
     }
