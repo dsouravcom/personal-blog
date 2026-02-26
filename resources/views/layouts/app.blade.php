@@ -8,22 +8,7 @@
     {{-- SEO Meta Tags --}}
     <meta name="author" content="Sourav Dutta">
     <meta name="robots" content="index, follow">
-    <link rel="canonical" href="{{ url()->current() }}">
     
-    {{-- Open Graph / Facebook --}}
-    <meta property="og:type" content="@yield('og:type', 'website')">
-    <meta property="og:url" content="{{ url()->current() }}">
-    <meta property="og:title" content="@yield('title', 'Sourav Dutta - Personal Blog')">
-    <meta property="og:description" content="@yield('description', 'Personal blog of Sourav Dutta - Thoughts on technology, design, and software engineering.')">
-    <meta property="og:image" content="@yield('og:image', asset('images/og-default.png'))">
-
-    {{-- Twitter --}}
-    <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="{{ url()->current() }}">
-    <meta property="twitter:title" content="@yield('title', 'Sourav Dutta - Personal Blog')">
-    <meta property="twitter:description" content="@yield('description', 'Personal blog of Sourav Dutta - Thoughts on technology, design, and software engineering.')">
-    <meta property="twitter:image" content="@yield('og:image', asset('images/og-default.png'))">
-
     {{-- Favicon --}}
     {{-- <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">

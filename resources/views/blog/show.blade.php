@@ -2,8 +2,9 @@
 
 @section('title', ($post->meta_title ?: $post->title) . ' — Sourav Dutta')
 
+@section('description', $post->meta_description ?? $post->excerpt ?? 'Read "' . $post->title . '" and other insightful articles on technology, design, and software engineering by Sourav Dutta.')
+
 @section('meta')
-    <meta name="description" content="{{ $post->meta_description ?? $post->excerpt ?? '' }}">
     <meta name="keywords" content="{{ $post->meta_keywords }}">
     @if($post->canonical_url)
         <link rel="canonical" href="{{ $post->canonical_url }}">
@@ -16,7 +17,7 @@
     <meta property="og:type" content="article">
     <meta property="og:url" content="{{ url()->current() }}">
     @php
-        $ogImage    = $post->og_image    ?: $post->cover_image;
+        $ogImage    = $post->og_image ?: $post->cover_image ?: asset('images/og-default.png');
         $ogImageAlt = $post->cover_image_alt ?? $post->title;
     @endphp
     @if($ogImage)
@@ -94,7 +95,7 @@
         <figure class="mb-8 rounded-xl overflow-hidden bg-zinc-100 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 shadow-sm">
             <img src="{{ $post->cover_image }}"
                  alt="{{ $post->cover_image_alt ?? $post->title }}"
-                 class="w-full h-auto max-h-[600px] object-cover hover:scale-[1.02] transition-transform duration-700 ease-out">
+                 class="w-full h-auto max-h-150 object-cover hover:scale-[1.02] transition-transform duration-700 ease-out">
             @if($post->cover_image_caption)
                 <figcaption class="text-center text-xs text-zinc-400 py-3 bg-zinc-50 dark:bg-zinc-900 border-t border-zinc-200 dark:border-zinc-700 font-mono">
                     // {{ $post->cover_image_caption }}
