@@ -15,6 +15,9 @@ return new class extends Migration
             $table->text('excerpt')->nullable();
             $table->longText('content');
             $table->string('cover_image')->nullable();
+            $table->string('cover_image_r2_key')->nullable();
+            $table->string('og_image')->nullable();
+            $table->string('og_image_r2_key')->nullable();
             $table->boolean('is_published')->default(false);
             $table->timestamp('published_at')->nullable();
             $table->timestamps();
