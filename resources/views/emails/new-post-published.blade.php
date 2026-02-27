@@ -152,8 +152,8 @@
 
         <div class="content">
 
-            <p class="intro" style="margin-top: 0;">
-                Hey, a new post just landed on the blog — and I wanted you to be the first to know.
+            <p class="intro" style="margin-top: 0; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; color: #22c55e;">
+                // System Update: New content deployed
             </p>
 
             <hr class="divider">
@@ -188,12 +188,12 @@
             @endif
 
             <p class="intro">
-                I spent a fair amount of time on this one, and I think it's worth a read.
-                Click below to check it out — no paywalls, no popups, just words on a page.
+                The build passed, the tests are green, and I’ve just pushed a new article to production.
+                It’s un-minified, fully commented, and ready for code review.
             </p>
 
             <a href="{{ route('blog.show', $post->slug) }}" class="btn">
-                <span style="margin-right:6px;">>_</span> Read the Post
+                <span style="margin-right:6px;">>_</span> ./read_post.sh
             </a>
 
             {{-- Signature --}}

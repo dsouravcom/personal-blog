@@ -121,24 +121,24 @@
         </div>
         
         <div class="content">
-            <h1>Success: Subscription Confirmed</h1>
+            <h1>Connection Established</h1>
             
-            <p><strong>Hello!</strong></p>
+            <p><strong>Greetings, Traveler.</strong></p>
             
             <p>
-                You have successfully subscribed to <strong>{{ config('app.name') }}</strong>. 
-                Consider this the initial commit to our correspondence.
+                You’ve successfully initialized a connection with <strong>{{ config('app.name') }}</strong>. 
+                Think of this as the <code>initial commit</code> to our shared repository of ideas.
             </p>
             
             <p>
-                I'll push updates to your inbox whenever I publish new content on technology, design, and code.
-                No spam, no bloat, just the source.
+                I’ll push updates directly to your inbox whenever I publish new thoughts on technology, design, and code.
+                No spam, no bloat, just the source code of my mind.
             </p>
 
             <br>
             
             <a href="{{ route('blog.index') }}" class="btn">
-                <span style="margin-right: 6px;">>_</span> Return to Home
+                <span style="margin-right: 6px;">>_</span> cd ~/home
             </a>
         </div>
 
