@@ -137,7 +137,7 @@
 
             <br>
             
-            <a href="{{ config('app.url') }}" class="btn">
+            <a href="{{ route('blog.index') }}" class="btn">
                 <span style="margin-right: 6px;">>_</span> Return to Home
             </a>
         </div>
@@ -150,7 +150,7 @@
                 &copy; {{ date('Y') }} Sourav Dutta. All rights reserved.
             </p>
             <p style="margin-top: 12px;">
-                <a href="{{ config('app.url') }}">Visit Website</a>
+                <a href="{{ route('blog.index') }}">Visit Website</a>
                 <span style="color: #d4d4d8; margin: 0 8px;">|</span>
                 <a href="{{ URL::signedRoute('blog.unsubscribe', ['subscriber' => $subscriber->id]) }}">Unsubscribe</a>
             </p>

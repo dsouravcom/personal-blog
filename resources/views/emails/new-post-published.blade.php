@@ -192,7 +192,7 @@
                 Click below to check it out — no paywalls, no popups, just words on a page.
             </p>
 
-            <a href="{{ config('app.url') }}/posts/{{ $post->slug }}" class="btn">
+            <a href="{{ route('blog.show', $post->slug) }}" class="btn">
                 <span style="margin-right:6px;">>_</span> Read the Post
             </a>
 
@@ -213,7 +213,7 @@
                 &copy; {{ date('Y') }} Sourav Dutta. All rights reserved.
             </p>
             <p style="margin-top: 12px;">
-                <a href="{{ config('app.url') }}">Visit Website</a>
+                <a href="{{ route('blog.index') }}">Visit Website</a>
                 <span style="color: #d4d4d8; margin: 0 8px;">|</span>
                 <a href="{{ URL::signedRoute('blog.unsubscribe', ['subscriber' => $subscriber->id]) }}">Unsubscribe</a>
             </p>
