@@ -107,7 +107,7 @@
                                 <div class="absolute inset-0 bg-red-500 transform translate-y-full group-hover:translate-y-0 transition-transform duration-200 ease-out z-0 mix-blend-difference"></div>
                             </a>
                             
-                            <button @click="history.back()" 
+                            <button onclick="window.history.length > 1 ? window.history.back() : window.location.href='/'" 
                                     class="px-6 py-3 border-2 border-zinc-900 dark:border-white text-zinc-900 dark:text-white font-bold uppercase tracking-wide hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors flex items-center justify-center gap-2">
                                 <span>Return_Back()</span>
                             </button>
