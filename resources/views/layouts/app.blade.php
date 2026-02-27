@@ -173,5 +173,15 @@
             }
         });
     </script>
+
+    @if(session('error') === 'Too many requests. Please slow down.')
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                if (typeof window.showRateLimitPopup === 'function') {
+                    window.showRateLimitPopup();
+                }
+            });
+        </script>
+    @endif
 </body>
 </html>

@@ -19,13 +19,15 @@ return Application::configure(basePath: dirname(__DIR__))
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->render(function (\Illuminate\Http\Exceptions\ThrottleRequestsException $e, \Illuminate\Http\Request $request) {
-            if ($request->expectsJson()) {
+            if ($request->expectsJson() || $request->ajax()) {
                 return response()->json([
                     'message' => 'Whoa there! Please slow down. You are making too many requests.',
                     'retry_after' => $e->getHeaders()['Retry-After'] ?? 60,
                 ], 429);
             }
             
-            return response()->view('errors.429', [], 429);
+            // For non-AJAX requests, we still need to return a response.
+            // We can return a simple view or redirect back with an error message.
+            return back()->with('error', 'Too many requests. Please slow down.');
         });
     })->create();
