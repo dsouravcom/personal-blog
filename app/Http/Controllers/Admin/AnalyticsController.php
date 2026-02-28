@@ -61,6 +61,13 @@ class AnalyticsController extends Controller
             ->limit(8)
             ->get();
 
+        // ── Country Breakdown ────────────────────────────────────────────────
+        $countryStats = PostView::select('country_code', DB::raw('count(*) as total'))
+            ->groupBy('country_code')
+            ->orderByDesc('total')
+            ->limit(8)
+            ->get();
+
         // ── Traffic Sources ──────────────────────────────────────────────────
         $sourceStats = PostView::select('referrer_domain', DB::raw('count(*) as total'))
             ->whereNotNull('referrer_domain')
@@ -89,7 +96,7 @@ class AnalyticsController extends Controller
 
         return view('admin.analytics.index', compact(
             'totalViews', 'totalLikes', 'totalComments', 'totalPosts',
-            'last30Days', 'deviceStats', 'browserStats', 'osStats',
+            'last30Days', 'deviceStats', 'browserStats', 'osStats', 'countryStats',
             'sourceStats', 'directViews', 'utmStats', 'topPosts'
         ));
     }
@@ -122,12 +129,13 @@ class AnalyticsController extends Controller
         $deviceStats  = $post->views()->select('device_type', DB::raw('count(*) as total'))->groupBy('device_type')->orderByDesc('total')->get();
         $browserStats = $post->views()->select('browser', DB::raw('count(*) as total'))->groupBy('browser')->orderByDesc('total')->get();
         $osStats      = $post->views()->select('os', DB::raw('count(*) as total'))->groupBy('os')->orderByDesc('total')->get();
+        $countryStats  = $post->views()->select('country_code', DB::raw('count(*) as total'))->groupBy('country_code')->orderByDesc('total')->limit(8)->get();
         $sourceStats  = $post->views()->select('referrer_domain', DB::raw('count(*) as total'))->whereNotNull('referrer_domain')->groupBy('referrer_domain')->orderByDesc('total')->limit(10)->get();
         $directViews  = $post->views()->whereNull('referrer_domain')->count();
 
         return view('admin.analytics.post', compact(
             'post', 'totalViews', 'totalLikes', 'totalComments',
-            'last30Days', 'deviceStats', 'browserStats', 'osStats',
+            'last30Days', 'deviceStats', 'browserStats', 'osStats', 'countryStats',
             'sourceStats', 'directViews'
         ));
     }

@@ -51,10 +51,10 @@
     </div>
 
     {{-- Breakdown Row --}}
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
 
         {{-- Device --}}
-        <div class="glass-panel rounded-lg p-5">
+        <div class="glass-panel rounded-lg p-5 self-start">
             <h3 class="text-xs font-mono text-gray-500 uppercase tracking-wider mb-4">Device Type</h3>
             <div class="space-y-3">
                 @foreach($deviceStats as $row)
@@ -114,6 +114,28 @@
                     </div>
                 @endforeach
                 @if($osStats->isEmpty())
+                    <p class="text-gray-600 text-xs font-mono">// No data yet</p>
+                @endif
+            </div>
+        </div>
+
+        {{-- Country --}}
+        <div class="glass-panel rounded-lg p-5">
+            <h3 class="text-xs font-mono text-gray-500 uppercase tracking-wider mb-4">Country</h3>
+            <div class="space-y-3">
+                @foreach($countryStats->take(6) as $row)
+                    @php $pct = $totalViews > 0 ? round(($row->total / $totalViews) * 100) : 0; @endphp
+                    <div>
+                        <div class="flex justify-between text-xs font-mono mb-1">
+                            <span class="text-gray-300">{{ $row->country_code ?: 'unknown' }}</span>
+                            <span class="text-gray-500">{{ $row->total }} ({{ $pct }}%)</span>
+                        </div>
+                        <div class="h-1.5 bg-gray-800 rounded-full overflow-hidden">
+                            <div class="h-full bg-yellow-500 rounded-full" style="width: {{ $pct }}%"></div>
+                        </div>
+                    </div>
+                @endforeach
+                @if($countryStats->isEmpty())
                     <p class="text-gray-600 text-xs font-mono">// No data yet</p>
                 @endif
             </div>

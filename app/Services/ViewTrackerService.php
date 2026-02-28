@@ -6,6 +6,7 @@ use App\Models\Post;
 use App\Models\PostView;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Stevebauman\Location\Facades\Location;
 
 class ViewTrackerService
 {
@@ -42,6 +43,18 @@ class ViewTrackerService
         $referrerUrl    = $request->header('referer');
         $referrerDomain = $referrerUrl ? parse_url($referrerUrl, PHP_URL_HOST) : null;
 
+        // Fetch Location (Country)
+        $countryCode = null;
+        if ($ip && $ip !== '127.0.0.1' && $ip !== '::1') {
+            try {
+                if ($position = Location::get($ip)) {
+                    $countryCode = $position->countryCode;
+                }
+            } catch (\Exception $e) {
+                // Ignore location errors
+            }
+        }
+
         // 6. Write to DB (unique constraint prevents double writes)
         try {
             PostView::create([
@@ -51,7 +64,7 @@ class ViewTrackerService
                 'device_type'      => $parsed['device'],
                 'browser'          => $parsed['browser'],
                 'os'               => $parsed['os'],
-                'country_code'     => null, // Extend with a GeoIP library if needed
+                'country_code'     => $countryCode, // Gathered via stevebauman/location
                 'referrer_domain'  => $referrerDomain,
                 'referrer_url'     => $referrerUrl,
                 'utm_source'       => $request->query('utm_source'),
@@ -118,7 +131,7 @@ class ViewTrackerService
 
         // OS
         $os = 'other';
-        foreach (['windows' => 'Windows', 'macintosh' => 'macOS', 'linux' => 'Linux', 'android' => 'Android', 'iphone' => 'iOS', 'ipad' => 'iOS'] as $key => $name) {
+        foreach (['windows' => 'Windows', 'macintosh' => 'MacBook', 'linux' => 'Linux', 'android' => 'Android', 'iphone' => 'iOS', 'ipad' => 'iOS'] as $key => $name) {
             if (str_contains($ua, $key)) {
                 $os = $name;
                 break;
