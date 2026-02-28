@@ -174,6 +174,27 @@
         });
     </script>
 
+    <script type="text/javascript">
+      (
+        function() {
+            try {
+              if(window.location && window.location.search && window.location.search.indexOf('capture-sitebehaviour-heatmap') !== -1) {
+                sessionStorage.setItem('capture-sitebehaviour-heatmap', '_');
+              }
+         
+              var sbSiteSecret = 'dbfebdb2-f19c-41bb-857e-745a2328cb57';
+              window.sitebehaviourTrackingSecret = sbSiteSecret;
+              var scriptElement = document.createElement('script');
+              scriptElement.defer = true;
+              scriptElement.id = 'site-behaviour-script-v2';
+              scriptElement.src = 'https://sitebehaviour-cdn.fra1.cdn.digitaloceanspaces.com/index.min.js?sitebehaviour-secret=' + sbSiteSecret;
+              document.head.appendChild(scriptElement); 
+            }
+            catch (e) {console.error(e)}
+        }
+      )()
+</script>
+
     @if(session('error') === 'Too many requests. Please slow down.')
         <script>
             document.addEventListener('DOMContentLoaded', () => {
