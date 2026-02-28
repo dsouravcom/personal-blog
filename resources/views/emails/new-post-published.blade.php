@@ -5,11 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>New Post: {{ $post->title }}</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
         body {
             margin: 0;
             padding: 0;
             background-color: #f4f4f5;
-            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+            font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
             color: #18181b;
             -webkit-font-smoothing: antialiased;
         }
@@ -26,6 +28,7 @@
             padding: 24px;
             color: #e4e4e7;
             font-size: 14px;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
         }
         .command-line {
             display: flex;
@@ -126,6 +129,13 @@
             text-decoration: underline;
         }
         p { margin: 0 0 16px; }
+        code {
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+            background-color: #f4f4f5;
+            padding: 2px 4px;
+            border-radius: 4px;
+            font-size: 13px;
+        }
     </style>
 </head>
 <body>

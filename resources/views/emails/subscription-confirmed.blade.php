@@ -5,11 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Subscription Confirmed</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
         body {
             margin: 0;
             padding: 0;
             background-color: #f4f4f5; /* zinc-100 */
-            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+            font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
             color: #18181b; /* zinc-900 */
             -webkit-font-smoothing: antialiased;
         }
@@ -73,6 +75,13 @@
         p {
             margin: 0 0 16px;
             color: #3f3f46; /* zinc-700 */
+        }
+        code {
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+            background-color: #f4f4f5;
+            padding: 2px 4px;
+            border-radius: 4px;
+            font-size: 13px;
         }
         .btn {
             display: inline-block;
