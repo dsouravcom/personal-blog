@@ -104,14 +104,14 @@
                 <button id="theme-toggle" type="button" class="group flex items-center gap-2 px-3 py-1.5 rounded-md hover:bg-zinc-100 dark:hover:bg-zinc-900 focus:outline-none transition-all duration-300 font-mono text-xs" aria-label="Toggle Dark Mode">
                     <span class="text-zinc-400 dark:text-zinc-500 select-none">--theme=</span>
                     
-                    {{-- Shows when in Dark Mode (to switch to Light) --}}
-                    <span id="theme-toggle-light-icon" class="hidden font-bold text-zinc-900 dark:text-white">
-                        light
-                    </span>
-                    
-                    {{-- Shows when in Light Mode (to switch to Dark) --}}
+                    {{-- Shows when in Dark Mode --}}
                     <span id="theme-toggle-dark-icon" class="hidden font-bold text-zinc-900 dark:text-white">
                         dark
+                    </span>
+                    
+                    {{-- Shows when in Light Mode --}}
+                    <span id="theme-toggle-light-icon" class="hidden font-bold text-zinc-900 dark:text-white">
+                        light
                     </span>
                 </button>
             </div>
@@ -153,9 +153,9 @@
 
         // Set initial icon state based on current theme
         if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-            themeToggleLightIcon.classList.remove('hidden');
-        } else {
             themeToggleDarkIcon.classList.remove('hidden');
+        } else {
+            themeToggleLightIcon.classList.remove('hidden');
         }
 
         themeToggleBtn.addEventListener('click', function() {

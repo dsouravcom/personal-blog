@@ -67,6 +67,12 @@ Route::prefix('admin')->name('admin.')->group(function () {
         // Analytics
         Route::get('analytics', [AnalyticsController::class, 'index'])->name('analytics.index');
         Route::get('analytics/posts/{post}', [AnalyticsController::class, 'post'])->name('analytics.post');
+
+        // Subscribers
+        Route::get('subscribers', [App\Http\Controllers\Admin\SubscriberController::class, 'index'])->name('subscribers.index');
+        Route::get('subscribers/export/csv', [App\Http\Controllers\Admin\SubscriberController::class, 'exportCsv'])->name('subscribers.export.csv');
+        Route::get('subscribers/export/pdf', [App\Http\Controllers\Admin\SubscriberController::class, 'exportPdf'])->name('subscribers.export.pdf');
+        Route::get('subscribers/export/html', [App\Http\Controllers\Admin\SubscriberController::class, 'exportHtml'])->name('subscribers.export.html');
     });
 });
 
