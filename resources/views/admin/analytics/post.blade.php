@@ -20,7 +20,7 @@
         <div class="mt-2 md:mt-0">
             <form method="GET" action="{{ route('admin.analytics.post', $post) }}">
                 <select name="period" onchange="this.form.submit()" class="bg-gray-800 border border-gray-700 text-sm font-mono text-gray-300 rounded px-3 py-1.5 focus:ring-primary-500 focus:border-primary-500">
-                    <option value="thisyear" {{ request('period') === 'thisyear' ? 'selected' : '' }}>This year</option>
+                    <option value="thisyear" {{ request('period') === 'thisyear' ? 'selected' : '' }}>Past 1 year</option>
                     <option value="6months" {{ request('period') === '6months' ? 'selected' : '' }}>Past 6 months</option>
                     <option value="30days" {{ request('period') === '30days' || !request('period') ? 'selected' : '' }}>Past 30 days</option>
                     <option value="7days" {{ request('period') === '7days' ? 'selected' : '' }}>7 days</option>

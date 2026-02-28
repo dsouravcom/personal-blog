@@ -18,7 +18,7 @@ class AnalyticsController extends Controller
         $period = $request->input('period', '30days');
         
         $startDate = match ($period) {
-            'thisyear' => now()->startOfYear(),
+            'thisyear' => now()->subYear()->startOfDay(),
             '6months'  => now()->subMonths(6),
             '7days'    => now()->subDays(6)->startOfDay(),
             'today'    => now()->startOfDay(),
@@ -26,7 +26,7 @@ class AnalyticsController extends Controller
         };
 
         $periodLabel = match ($period) {
-            'thisyear' => 'This year',
+            'thisyear' => 'Past 1 year',
             '6months'  => 'Past 6 months',
             '7days'    => 'Last 7 days',
             'today'    => 'Today',
@@ -52,7 +52,7 @@ class AnalyticsController extends Controller
 
         // Fill in missing days with zero
         $chartData = collect();
-        $daysCount = \Carbon\Carbon::parse($startDate)->diffInDays(now());
+        $daysCount = (int) \Carbon\Carbon::parse($startDate)->diffInDays(now());
         if ($period === 'today') $daysCount = 0;
 
         for ($i = $daysCount; $i >= 0; $i--) {
@@ -140,7 +140,7 @@ class AnalyticsController extends Controller
         $period = $request->input('period', '30days');
         
         $startDate = match ($period) {
-            'thisyear' => now()->startOfYear(),
+            'thisyear' => now()->subYear()->startOfDay(),
             '6months'  => now()->subMonths(6),
             '7days'    => now()->subDays(6)->startOfDay(),
             'today'    => now()->startOfDay(),
@@ -148,7 +148,7 @@ class AnalyticsController extends Controller
         };
 
         $periodLabel = match ($period) {
-            'thisyear' => 'This year',
+            'thisyear' => 'Past 1 year',
             '6months'  => 'Past 6 months',
             '7days'    => 'Last 7 days',
             'today'    => 'Today',
@@ -170,7 +170,7 @@ class AnalyticsController extends Controller
             ->keyBy('date');
 
         $chartData = collect();
-        $daysCount = \Carbon\Carbon::parse($startDate)->diffInDays(now());
+        $daysCount = (int) \Carbon\Carbon::parse($startDate)->diffInDays(now());
         if ($period === 'today') $daysCount = 0;
 
         for ($i = $daysCount; $i >= 0; $i--) {
