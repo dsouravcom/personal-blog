@@ -5,11 +5,24 @@
 @section('content')
 
     {{-- Page Header --}}
-    <div class="mb-8">
-        <h1 class="text-2xl font-bold font-mono text-white tracking-tight">
-            <span class="text-primary-400">$</span> analytics.report
-        </h1>
-        <p class="mt-1 text-sm text-gray-500 font-mono">// Last 30 days — real-time stats</p>
+    <div class="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+            <h1 class="text-2xl font-bold font-mono text-white tracking-tight">
+                <span class="text-primary-400">$</span> analytics.report
+            </h1>
+            <p class="mt-1 text-sm text-gray-500 font-mono">// {{ $periodLabel ?? 'Last 30 days' }} — real-time stats</p>
+        </div>
+        <div>
+            <form method="GET" action="{{ route('admin.analytics.index') }}">
+                <select name="period" onchange="this.form.submit()" class="bg-gray-800 border border-gray-700 text-sm font-mono text-gray-300 rounded px-3 py-1.5 focus:ring-primary-500 focus:border-primary-500">
+                    <option value="thisyear" {{ request('period') === 'thisyear' ? 'selected' : '' }}>This year</option>
+                    <option value="6months" {{ request('period') === '6months' ? 'selected' : '' }}>Past 6 months</option>
+                    <option value="30days" {{ request('period') === '30days' || !request('period') ? 'selected' : '' }}>Past 30 days</option>
+                    <option value="7days" {{ request('period') === '7days' ? 'selected' : '' }}>Past 7 days</option>
+                    <option value="today" {{ request('period') === 'today' ? 'selected' : '' }}>Today</option>
+                </select>
+            </form>
+        </div>
     </div>
 
     {{-- Top Stat Cards --}}
@@ -43,7 +56,7 @@
     {{-- Views Over Time Chart --}}
     <div class="glass-panel rounded-lg p-6 mb-8">
         <h2 class="text-sm font-bold font-mono text-gray-300 mb-4">
-            <span class="text-primary-400">></span> views_per_day <span class="text-gray-600">// last 30 days</span>
+            <span class="text-primary-400">></span> views_per_day <span class="text-gray-600">// {{ strtolower($periodLabel ?? 'last 30 days') }}</span>
         </h2>
         <div class="relative h-64">
             <canvas id="viewsChart"></canvas>
@@ -164,7 +177,7 @@
                     </tr>
                     @foreach($sourceStats->take(10) as $row)
                         <tr class="text-gray-300 hover:bg-gray-800/30">
-                            <td class="py-2 truncate max-w-40">{{ $row->referrer_domain }}</td>
+                            <td class="py-2 truncate max-w-40">{{ $row->referrer_domain === 'blog.sourav.dev' ? 'home' : $row->referrer_domain }}</td>
                         <td class="py-2 text-right">{{ $row->total }}</td>
                         <td class="py-2 text-right text-gray-500">{{ $totalViews > 0 ? round(($row->total / $totalViews) * 100) : 0 }}%</td>
                         </tr>
@@ -253,7 +266,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <script>
     (function() {
-        const raw = @json($last30Days);
+        const raw = @json($chartData ?? []);
         const labels = raw.map(d => d.date);
         const data   = raw.map(d => d.total);
 
@@ -278,7 +291,29 @@
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
+                interaction: {
+                    mode: 'index',
+                    intersect: false,
+                },
+                plugins: { 
+                    legend: { display: false },
+                    tooltip: {
+                        enabled: true,
+                        backgroundColor: 'rgba(17, 24, 39, 0.9)',
+                        titleColor: '#9ca3af',
+                        bodyColor: '#e5e7eb',
+                        titleFont: { family: 'JetBrains Mono', size: 12 },
+                        bodyFont: { family: 'JetBrains Mono', size: 12 },
+                        padding: 10,
+                        cornerRadius: 4,
+                        displayColors: false,
+                        callbacks: {
+                            label: function(context) {
+                                return ' Views: ' + context.parsed.y;
+                            }
+                        }
+                    }
+                },
                 scales: {
                     x: {
                         ticks: { color: '#4b5563', font: { family: 'JetBrains Mono', size: 11 }, maxTicksLimit: 10 },
