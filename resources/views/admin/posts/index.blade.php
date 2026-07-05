@@ -1,106 +1,81 @@
 @extends('layouts.admin')
 
-@section('title', 'TRANSMISSION_LOG')
+@section('title', 'Posts')
 
 @section('content')
-<div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+<div class="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
     <div>
-        <h1 class="text-2xl font-bold text-white tracking-tight flex items-center gap-2">
-            <span class="text-primary-500 font-mono">></span> TRANSMISSION_LOG
-        </h1>
-        <p class="text-gray-400 text-xs font-mono mt-1">
-            // INDEXING ALL BROADCASTS...
-        </p>
+        <h1 class="text-2xl font-semibold tracking-tight text-white">Posts</h1>
+        <p class="mt-1 text-sm text-zinc-500">{{ $posts->total() }} {{ Str::plural('post', $posts->total()) }} · manage your writing</p>
     </div>
-    
-    <a href="{{ route('admin.posts.create') }}"
-       class="group relative inline-flex items-center justify-center px-4 py-2 font-mono text-sm font-medium text-white transition-all duration-200 bg-primary-600 border border-primary-500 rounded hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 focus:ring-offset-[#050505]">
-        <span class="absolute inset-0 w-full h-full -mt-1 rounded opacity-30 bg-linear-to-b from-transparent via-transparent to-black"></span>
-        <span class="relative flex items-center gap-2">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
-            INITIATE_NEW_POST
-        </span>
+    <a href="{{ route('admin.posts.create') }}" class="btn-brand inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-sm font-semibold">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 5v14M5 12h14"/></svg>
+        New post
     </a>
 </div>
 
-<div class="relative overflow-hidden rounded-lg border border-gray-800 bg-[#0a0a0a]/50 backdrop-blur-sm">
-    <div class="absolute top-0 left-0 w-full h-px bg-linear-to-r from-transparent via-primary-500/50 to-transparent"></div>
-
+<div class="panel overflow-hidden">
     @if ($posts->isEmpty())
-        <div class="flex flex-col items-center justify-center py-16 text-center">
-            <div class="w-16 h-16 mb-4 rounded-full bg-gray-900 border border-gray-800 flex items-center justify-center text-gray-600">
-                <svg class="w-8 h-8 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-                </svg>
+        <div class="flex flex-col items-center justify-center py-20 text-center">
+            <div class="mb-4 grid h-14 w-14 place-items-center rounded-2xl border border-[#272320] bg-[#1a1815] text-zinc-600">
+                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4h11l5 5v11a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1Z"/></svg>
             </div>
-            <h3 class="text-gray-300 font-mono text-sm mb-1">NO_DATA_FOUND</h3>
-            <p class="text-gray-500 text-xs max-w-sm mb-6">The transmission logs are empty. Begin broadcasting to populate the feed.</p>
-            <a href="{{ route('admin.posts.create') }}" class="text-primary-400 hover:text-primary-300 text-xs font-mono hover:underline">
-                > EXECUTE: create_first_post();
-            </a>
+            <h3 class="text-sm font-medium text-zinc-300">No posts yet</h3>
+            <p class="mt-1 max-w-xs text-xs text-zinc-500">Write your first post to get things started.</p>
+            <a href="{{ route('admin.posts.create') }}" class="mt-5 text-sm font-medium text-amber-400 hover:text-amber-300">Create your first post →</a>
         </div>
     @else
         <div class="overflow-x-auto">
-            <table class="w-full text-left border-collapse">
+            <table class="w-full text-left">
                 <thead>
-                    <tr class="border-b border-gray-800 bg-gray-900/40 text-xs text-gray-500 uppercase font-mono">
-                        <th class="px-6 py-4 font-medium tracking-wider w-1/2">ID // Title</th>
-                        <th class="px-6 py-4 font-medium tracking-wider">State</th>
-                        <th class="px-6 py-4 font-medium tracking-wider">Timestamp</th>
-                        <th class="px-6 py-4 font-medium tracking-wider text-right">Operations</th>
+                    <tr class="border-b border-[#221f1c] text-xs font-medium uppercase tracking-wider text-zinc-500">
+                        <th class="px-6 py-4">Title</th>
+                        <th class="px-6 py-4">Status</th>
+                        <th class="px-6 py-4">Published</th>
+                        <th class="px-6 py-4 text-right">Actions</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-gray-800 text-sm">
+                <tbody class="divide-y divide-[#1c1a17] text-sm">
                     @foreach ($posts as $post)
-                        <tr class="group hover:bg-white/2 transition-colors">
+                        <tr class="group transition-colors hover:bg-white/[0.02]">
                             <td class="px-6 py-4">
-                                <div class="flex items-start gap-4">
-                                    <span class="text-gray-600 font-mono text-xs mt-1">#{{ str_pad($post->id, 3, '0', STR_PAD_LEFT) }}</span>
-                                    <div>
-                                        <div class="font-medium text-gray-200 group-hover:text-white transition-colors text-base">{{ $post->title }}</div>
-                                        <div class="text-gray-500 text-xs font-mono mt-1 opacity-70 flex items-center gap-2">
-                                            <span class="text-primary-500/50">/slug:</span> {{ $post->slug }}
-                                        </div>
+                                <div class="flex items-start gap-3">
+                                    <span class="mt-0.5 font-mono text-xs text-zinc-600">#{{ str_pad($post->id, 2, '0', STR_PAD_LEFT) }}</span>
+                                    <div class="min-w-0">
+                                        <div class="font-medium text-zinc-100">{{ $post->title }}</div>
+                                        <div class="mt-0.5 font-mono text-xs text-zinc-500">/{{ $post->slug }}</div>
                                     </div>
                                 </div>
                             </td>
-                            <td class="px-6 py-4 align-top pt-5">
+                            <td class="px-6 py-4">
                                 @if ($post->is_published)
-                                    <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded border border-green-900/50 bg-green-900/10 text-green-400 text-[10px] font-mono uppercase tracking-wide shadow-[0_0_10px_rgba(34,197,94,0.1)]">
-                                        <span class="w-1.5 h-1.5 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.6)] animate-pulse"></span>
-                                        LIVE
+                                    <span class="inline-flex items-center gap-1.5 rounded-full border border-emerald-800/50 bg-emerald-950/40 px-2.5 py-1 text-[11px] font-medium text-emerald-400">
+                                        <span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span> Published
                                     </span>
                                 @else
-                                    <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded border border-yellow-900/50 bg-yellow-900/10 text-yellow-500 text-[10px] font-mono uppercase tracking-wide">
-                                        <span class="w-1.5 h-1.5 rounded-full bg-yellow-500"></span>
-                                        DRAFT
+                                    <span class="inline-flex items-center gap-1.5 rounded-full border border-amber-800/50 bg-amber-950/30 px-2.5 py-1 text-[11px] font-medium text-amber-400">
+                                        <span class="h-1.5 w-1.5 rounded-full bg-amber-500"></span> Draft
                                     </span>
                                 @endif
                             </td>
-                            <td class="px-6 py-4 align-top pt-5">
-                                <div class="font-mono text-xs text-gray-400">
-                                    {{ $post->published_at?->format('Y-m-d') ?? 'N/A' }}
-                                    <span class="text-gray-600 block text-[10px] mt-0.5">{{ $post->published_at?->format('H:i:s T') }}</span>
+                            <td class="px-6 py-4">
+                                <div class="font-mono text-xs text-zinc-400">
+                                    {{ $post->published_at?->format('M j, Y') ?? '—' }}
+                                    <span class="mt-0.5 block text-[10px] text-zinc-600">{{ $post->published_at?->format('H:i') }}</span>
                                 </div>
                             </td>
-                            <td class="px-6 py-4 text-right align-top pt-5">
-                                <div class="flex items-center justify-end gap-3 opacity-0 group-hover:opacity-100 transition-opacity">
-                                    <a href="{{ route('admin.posts.edit', $post) }}" 
-                                       class="p-1.5 text-gray-400 hover:text-primary-400 hover:bg-primary-400/10 rounded transition-all" 
-                                       title="Edit Transmission">
-                                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                                        </svg>
+                            <td class="px-6 py-4">
+                                <div class="flex items-center justify-end gap-1.5">
+                                    <a href="{{ route('blog.show', $post->slug) }}" target="_blank" class="grid h-8 w-8 place-items-center rounded-lg text-zinc-500 transition-colors hover:bg-white/5 hover:text-white" title="View">
+                                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
                                     </a>
-                                    
-                                    <form action="{{ route('admin.posts.destroy', $post) }}" method="POST" class="inline-block" 
-                                          onsubmit="return confirm('WARNING: Are you sure you want to purge this transmission log? This action cannot be undone.');">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="p-1.5 text-gray-400 hover:text-red-500 hover:bg-red-500/10 rounded transition-all" title="Purge Log">
-                                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                            </svg>
+                                    <a href="{{ route('admin.posts.edit', $post) }}" class="grid h-8 w-8 place-items-center rounded-lg text-zinc-500 transition-colors hover:bg-amber-500/10 hover:text-amber-400" title="Edit">
+                                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+                                    </a>
+                                    <form action="{{ route('admin.posts.destroy', $post) }}" method="POST" onsubmit="return confirm('Delete “{{ addslashes($post->title) }}”? This cannot be undone.');">
+                                        @csrf @method('DELETE')
+                                        <button type="submit" class="grid h-8 w-8 place-items-center rounded-lg text-zinc-500 transition-colors hover:bg-red-500/10 hover:text-red-500" title="Delete">
+                                            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 6h18M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2M19 6l-1 14a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1L5 6"/></svg>
                                         </button>
                                     </form>
                                 </div>
@@ -110,11 +85,11 @@
                 </tbody>
             </table>
         </div>
-        
+
         @if($posts->hasPages())
-        <div class="px-0 py-0 border-t border-gray-800 bg-gray-900/20">
-            {{ $posts->links('pagination.admin') }} 
-        </div>
+            <div class="border-t border-[#221f1c]">
+                {{ $posts->links('pagination.admin') }}
+            </div>
         @endif
     @endif
 </div>

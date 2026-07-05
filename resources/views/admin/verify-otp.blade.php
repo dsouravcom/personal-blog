@@ -1,79 +1,62 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="dark">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="robots" content="noindex, nofollow">
-    <title>SECURELINK // OTP_REQ</title>
-    
-    <!-- Fonts -->
+    <title>Verify · Studio — {{ config('site.name') }}</title>
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Mono:ital,wght@0,100;0,400;0,700;1,100&display=swap" rel="stylesheet">
-    
-    <!-- Tailwind -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
-
+    <script>
+        tailwind.config = { darkMode: 'class', theme: { extend: { fontFamily: { sans:['Inter','sans-serif'], mono:['JetBrains Mono','monospace'] } } } };
+    </script>
     <style>
-        :root {
-            --bg-dark: #0a0a0a;
-        }
-
-        body {
-            background-color: var(--bg-dark);
-            color: #dcdcdc;
-            font-family: 'IBM Plex Mono', monospace;
-            overflow: hidden;
-            user-select: none;
-        }
-        
-        .crt-effect {
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
-            background-size: 100% 2px, 3px 100%;
-            z-index: 999;
-            pointer-events: none;
-        }
+        body { background:#0a0a0a; color:#d4d0cb; }
+        ::selection { background:#f59e0b; color:#1a1206; }
+        .grain { background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
     </style>
 </head>
-<body class="flex items-center justify-center min-h-screen relative bg-black">
+<body class="relative flex min-h-screen items-center justify-center overflow-hidden p-4 font-sans antialiased">
 
-    <div class="crt-effect"></div>
-
-    <div class="w-full max-w-md bg-[#111] border border-[#333] shadow-2xl p-8 relative z-50">
-        <div class="absolute -top-3 left-4 bg-black px-2 text-yellow-500 text-xs font-bold border border-yellow-900">
-            SECURITY CHECKPOINT
-        </div>
-
-        <div class="mb-6 text-center">
-            <p class="text-yellow-500 font-bold text-2xl mb-2">2FA REQUIRED</p>
-            <p class="text-xs text-gray-500 font-mono tracking-widest mt-2">
-                A verification code has been sent to your secure channel.
-            </p>
-        </div>
-
-        <form method="POST" action="{{ route('admin.otp.verify') }}" class="space-y-5">
-            @csrf
-            
-            <div class="group">
-                <label class="block text-[10px] uppercase text-gray-600 mb-1">Enter One-Time Password</label>
-                <input type="text" name="otp" required autofocus
-                    class="w-full bg-black border border-gray-800 text-white p-2 font-mono text-center text-xl tracking-[0.5em] focus:border-yellow-600 focus:outline-none transition-colors"
-                    placeholder="______" maxlength="6" pattern="[0-9]*" inputmode="numeric" api-otp>
-            </div>
-
-            <button type="submit" class="w-full bg-[#222] text-gray-400 hover:bg-yellow-900 hover:text-white border border-[#333] py-3 text-xs uppercase font-bold tracking-widest transition-all duration-200">
-                Authenticate
-            </button>
-
-            @if($errors->any())
-                <div class="mt-4 text-red-500 text-xs text-center border border-red-900/50 bg-red-900/10 p-2 font-mono">
-                    > ERROR: {{ $errors->first() }}
-                </div>
-            @endif
-        </form>
+    <div class="pointer-events-none absolute inset-0" aria-hidden="true">
+        <div class="grain absolute inset-0 opacity-[0.04] mix-blend-screen"></div>
+        <div class="absolute -top-40 left-1/2 h-[32rem] w-[32rem] -translate-x-1/2 rounded-full bg-amber-500/10 blur-[120px]"></div>
     </div>
 
+    <div class="relative w-full max-w-sm">
+        <div class="mb-8 flex flex-col items-center text-center">
+            <span class="grid h-12 w-12 place-items-center rounded-2xl border border-[#272320] bg-[#131211] text-amber-400">
+                <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 2 4 6v6c0 5 3.5 8 8 10 4.5-2 8-5 8-10V6l-8-4Z"/><path stroke-linecap="round" stroke-linejoin="round" d="m9 12 2 2 4-4"/></svg>
+            </span>
+            <h1 class="mt-5 text-xl font-semibold tracking-tight text-white">Verify it’s you</h1>
+            <p class="mt-1 max-w-xs text-sm text-zinc-500">We sent a 6-digit code to your email. Enter it below to continue.</p>
+        </div>
+
+        <form method="POST" action="{{ route('admin.otp.verify') }}" class="rounded-2xl border border-[#272320] bg-[#131211] p-6 shadow-2xl">
+            @csrf
+
+            @if($errors->any())
+                <div class="mb-5 rounded-lg border border-red-900/50 bg-red-950/30 px-4 py-3 text-center text-sm text-red-400">
+                    {{ $errors->first() }}
+                </div>
+            @endif
+
+            <label for="otp" class="mb-1.5 block font-mono text-xs uppercase tracking-wider text-zinc-500">One-time code</label>
+            <input type="text" name="otp" id="otp" required autofocus maxlength="6" pattern="[0-9]*" inputmode="numeric" autocomplete="one-time-code"
+                   class="w-full rounded-lg border border-[#2a2622] bg-[#0d0c0b] px-4 py-3 text-center font-mono text-2xl tracking-[0.5em] text-white placeholder:text-zinc-700 focus:border-amber-600 focus:outline-none focus:ring-2 focus:ring-amber-600/20"
+                   placeholder="000000">
+
+            <button type="submit" class="mt-6 w-full rounded-lg bg-amber-500 py-2.5 text-sm font-semibold text-[#1a1206] transition-all hover:bg-amber-400 active:scale-[0.98]">
+                Verify &amp; sign in
+            </button>
+        </form>
+
+        <p class="mt-6 text-center">
+            <a href="{{ route('blog.index') }}" class="text-xs text-zinc-500 transition-colors hover:text-zinc-300">← Back to site</a>
+        </p>
+    </div>
 </body>
 </html>

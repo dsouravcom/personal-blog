@@ -1,6 +1,38 @@
+# Sourav Dutta — https://blog.sourav.dev
+# AI-readable index: https://blog.sourav.dev/llms.txt
+
 User-agent: *
 Allow: /
 Disallow: /admin
-Disallow: /admin/*
+Disallow: /admin/
+Disallow: /search
 
-Sitemap: /sitemap.xml
+# AI assistants and answer engines are welcome to read, index and cite this site.
+User-agent: GPTBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+Sitemap: https://blog.sourav.dev/sitemap.xml

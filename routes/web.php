@@ -14,9 +14,13 @@ use Illuminate\Support\Facades\Route;
 // ─── Public blog ─────────────────────────────────────────────────────────────
 Route::middleware('throttle:read.content')->group(function () {
     Route::get('/', [BlogController::class, 'index'])->name('blog.index');
+    Route::get('/search', [BlogController::class, 'search'])->name('blog.search');
+    Route::get('/api/search', [BlogController::class, 'searchApi'])->name('blog.search.api');
     Route::get('/posts/{slug}', [BlogController::class, 'show'])->name('blog.show');
     Route::get('/tags/{slug}', [TagController::class, 'show'])->name('blog.tag');
     Route::get('/sitemap.xml', [BlogController::class, 'sitemap'])->name('blog.sitemap');
+    Route::get('/feed', [BlogController::class, 'feed'])->name('blog.feed');
+    Route::get('/llms.txt', [BlogController::class, 'llms'])->name('blog.llms');
 });
 
 Route::post('/subscribe', [SubscriberController::class, 'store'])

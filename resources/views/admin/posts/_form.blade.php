@@ -1,422 +1,283 @@
 @if($errors->any())
-    <div class="mb-6 bg-red-950/40 border border-red-500/40 text-red-300 rounded-lg p-4 font-mono text-xs">
-        <p class="font-bold text-red-400 mb-2 flex items-center gap-2">
-            <span class="text-red-500 text-base">✗</span> VALIDATION_ERRORS — fix the following before resubmitting:
+    <div class="mb-6 rounded-xl border border-red-900/50 bg-red-950/30 p-4 text-sm">
+        <p class="mb-2 flex items-center gap-2 font-medium text-red-400">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v4m0 4h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/></svg>
+            Please fix the following before saving:
         </p>
-        <ul class="list-disc list-inside space-y-1 text-red-300/80">
-            @foreach($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
+        <ul class="list-inside list-disc space-y-1 text-red-300/80">
+            @foreach($errors->all() as $error)<li>{{ $error }}</li>@endforeach
         </ul>
     </div>
 @endif
 
-<div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
-    {{-- Left Column: Editor --}}
-    <div class="xl:col-span-2 space-y-6">
-        
-        {{-- Title Input --}}
-        <div class="group">
-            <label for="title" class="block text-xs font-mono text-gray-500 mb-1 ml-1 group-focus-within:text-primary-400 transition-colors">>> TITLE_STRING <span class="text-red-500">*</span></label>
+<div class="grid grid-cols-1 gap-6 xl:grid-cols-3">
+    {{-- ── Left: editor ─────────────────────────────────────────────────────── --}}
+    <div class="space-y-6 xl:col-span-2">
+
+        {{-- Title --}}
+        <div>
+            <label for="title" class="mb-1.5 block font-mono text-xs uppercase tracking-wider text-zinc-500">Title <span class="text-amber-500">*</span></label>
+            <input type="text" name="title" id="title" value="{{ old('title', $post->title ?? '') }}" required
+                   class="w-full rounded-lg border border-[#2a2622] bg-[#0d0c0b] p-3.5 text-white placeholder:text-zinc-600 focus:border-amber-600 focus:outline-none focus:ring-2 focus:ring-amber-600/20"
+                   placeholder="An unmissable headline">
+            @error('title') <p class="mt-1 text-xs text-red-500">{{ $message }}</p> @enderror
+        </div>
+
+        {{-- Slug --}}
+        <div>
+            <label for="slug" class="mb-1.5 block font-mono text-xs uppercase tracking-wider text-zinc-500">URL slug</label>
             <div class="relative">
-                <input type="text" 
-                       name="title" 
-                       id="title" 
-                       value="{{ old('title', $post->title ?? '') }}"
-                       class="w-full bg-[#0a0a0a] border border-gray-800 rounded p-4 text-white placeholder-gray-700 font-mono focus:border-primary-500 focus:ring-1 focus:ring-primary-500 transition-all outline-none"
-                       placeholder="Enter_Transmission_Title..."
-                       required>
-                <div class="absolute right-3 top-4 text-xs text-gray-700 font-mono hidden group-focus-within:block animate-pulse">
-                    INPUT_ACTIVE
-                </div>
+                <span class="absolute left-3.5 top-1/2 -translate-y-1/2 font-mono text-sm text-zinc-600">/</span>
+                <input type="text" name="slug" id="slug" value="{{ old('slug', $post->slug ?? '') }}"
+                       class="w-full rounded-lg border border-[#2a2622] bg-[#0d0c0b] py-3 pl-7 pr-4 font-mono text-sm text-zinc-300 placeholder:text-zinc-600 focus:border-amber-600 focus:outline-none focus:ring-2 focus:ring-amber-600/20"
+                       placeholder="auto-generated-from-title">
             </div>
-            @error('title') <p class="text-red-500 text-xs mt-1 font-mono">{{ $message }}</p> @enderror
+            @error('slug') <p class="mt-1 text-xs text-red-500">{{ $message }}</p> @enderror
         </div>
 
-        {{-- Slug Input --}}
-        <div class="group">
-            <label for="slug" class="block text-xs font-mono text-gray-500 mb-1 ml-1 group-focus-within:text-primary-400 transition-colors">>> URL_SLUG_IDENTIFIER</label>
-            <div class="relative">
-                <span class="absolute left-4 top-3.5 text-gray-600 font-mono text-sm">/</span>
-                <input type="text" 
-                       name="slug" 
-                       id="slug" 
-                       value="{{ old('slug', $post->slug ?? '') }}"
-                       class="w-full bg-[#0a0a0a] border border-gray-800 rounded py-3 pr-4 pl-8 text-gray-300 placeholder-gray-700 font-mono text-sm focus:border-primary-500 focus:ring-1 focus:ring-primary-500 transition-all outline-none"
-                       placeholder="auto-generated-if-empty">
-            </div>
-            @error('slug') <p class="text-red-500 text-xs mt-1 font-mono">{{ $message }}</p> @enderror
+        {{-- Excerpt --}}
+        <div>
+            <label for="excerpt" class="mb-1.5 block font-mono text-xs uppercase tracking-wider text-zinc-500">Excerpt</label>
+            <textarea name="excerpt" id="excerpt" rows="3"
+                      class="w-full resize-none rounded-lg border border-[#2a2622] bg-[#0d0c0b] p-3.5 text-sm text-zinc-300 placeholder:text-zinc-600 focus:border-amber-600 focus:outline-none focus:ring-2 focus:ring-amber-600/20"
+                      placeholder="A one or two sentence summary shown in listings and previews.">{{ old('excerpt', $post->excerpt ?? '') }}</textarea>
+            @error('excerpt') <p class="mt-1 text-xs text-red-500">{{ $message }}</p> @enderror
         </div>
 
-        {{-- Excerpt Input --}}
-        <div class="group">
-             <label for="excerpt" class="block text-xs font-mono text-gray-500 mb-1 ml-1 group-focus-within:text-primary-400 transition-colors">>> SUMMARY_BUFFER</label>
-             <textarea name="excerpt" 
-                       id="excerpt" 
-                       rows="3" 
-                       class="w-full bg-[#0a0a0a] border border-gray-800 rounded p-4 text-gray-400 placeholder-gray-700 font-mono text-sm focus:border-primary-500 focus:ring-1 focus:ring-primary-500 transition-all outline-none resize-none"
-                       placeholder="Brief transmission summary...">{{ old('excerpt', $post->excerpt ?? '') }}</textarea>
-             @error('excerpt') <p class="text-red-500 text-xs mt-1 font-mono">{{ $message }}</p> @enderror
-        </div>
-
-        {{-- Content Editor (TipTap - Build Version) --}}
-        <div class="group">
-            <div class="flex items-center justify-between mb-1 ml-1">
-                <label for="content" class="block text-xs font-mono text-gray-500 group-focus-within:text-primary-400 transition-colors">>> MAIN_CONTENT_BLOCK <span class="text-red-500">*</span></label>
-                <div class="text-[10px] text-gray-600 font-mono border border-gray-800 px-2 py-0.5 rounded">
-                    MODE: WYSIWYG
-                </div>
+        {{-- Content --}}
+        <div>
+            <div class="mb-1.5 flex items-center justify-between">
+                <label for="content" class="block font-mono text-xs uppercase tracking-wider text-zinc-500">Content <span class="text-amber-500">*</span></label>
+                <span class="rounded border border-[#2a2622] px-2 py-0.5 font-mono text-[10px] text-zinc-600">Rich text</span>
             </div>
-            
-            <div class="bg-[#0a0a0a] border border-gray-800 rounded overflow-hidden focus-within:border-primary-500 focus-within:ring-1 focus-within:ring-primary-500 transition-all">
-                
-                {{-- Toolbar --}}
-                <div id="tiptap-toolbar" class="flex flex-wrap gap-1 p-2 border-b border-gray-800 bg-[#050505]">
-                    <!-- Buttons injected by JS -->
-                </div>
 
-                {{-- Editor Content (Visual) --}}
-                <div id="tiptap-editor" class="min-h-[500px] text-gray-300 font-mono focus:outline-none"></div>
-                
-                {{-- Hidden input to store value --}}
+            <div class="overflow-hidden rounded-lg border border-[#2a2622] bg-[#0d0c0b] focus-within:border-amber-600 focus-within:ring-2 focus-within:ring-amber-600/20">
+                <div id="tiptap-toolbar" class="flex flex-wrap gap-1 border-b border-[#221f1c] bg-[#111010] p-2"></div>
+                <div id="tiptap-editor" class="min-h-[500px] font-mono text-zinc-300 focus:outline-none"></div>
                 <input type="hidden" name="content" id="content" value="{{ old('content', $post->content ?? '') }}" required>
             </div>
-
-            @error('content') <p class="text-red-500 text-xs mt-1 font-mono">{{ $message }}</p> @enderror
+            @error('content') <p class="mt-1 text-xs text-red-500">{{ $message }}</p> @enderror
         </div>
 
         <script>
-            // Pass routes to the external JS file
             window.UPLOAD_URL = "{{ route('admin.posts.upload-image') }}";
         </script>
-        {{-- Load the bundled editor script --}}
         @vite('resources/js/admin/post-editor.js')
-        
+
         <style>
-            /* Basic TipTap Styles */
             .ProseMirror { outline: none !important; min-height: 500px; padding: 1rem; }
             .ProseMirror p.is-editor-empty:first-child::before {
-                content: attr(data-placeholder);
-                float: left;
-                color: #374151;
-                pointer-events: none;
-                height: 0;
+                content: attr(data-placeholder); float: left; color: #4b463f; pointer-events: none; height: 0;
             }
-            /* Code Block Styles */
             .ProseMirror pre {
-                background: #111;
-                border-radius: 0.5rem;
-                color: #e5e7eb;
-                font-family: 'JetBrains Mono', monospace;
-                padding: 0.75rem 1rem;
-                border: 1px solid #374151;
-                overflow-x: auto;
+                background: #17150f; border-radius: 0.6rem; color: #e5e7eb;
+                font-family: 'JetBrains Mono', monospace; padding: 0.75rem 1rem; border: 1px solid #2a2622; overflow-x: auto;
             }
-            .ProseMirror code {
-                color: #ec4899;
-                background-color: rgba(255, 255, 255, 0.1);
-                padding: 0.1em 0.3em;
-                border-radius: 0.2em;
-                font-family: 'JetBrains Mono', monospace;
-            } 
-            .ProseMirror pre code {
-                color: inherit;
-                background-color: transparent;
-                padding: 0;
-            }
-            /* Blockquote */
-            .ProseMirror blockquote {
-                border-left: 2px solid #3b82f6;
-                padding-left: 1rem;
-                font-style: italic;
-                color: #9ca3af;
-            }
-            /* Images */
-            .ProseMirror img {
-                max-width: 100%;
-                height: auto;
-                border-radius: 0.5rem;
-                border: 1px solid #374151;
-            }
-            .ProseMirror img.ProseMirror-selectednode {
-                outline: 2px solid #3b82f6;
-            }
-
-            /* Typography Fixes for Tailwind Reset */
+            .ProseMirror code { color: #fbbf24; background-color: rgba(255,255,255,0.06); padding: 0.1em 0.3em; border-radius: 0.2em; font-family: 'JetBrains Mono', monospace; }
+            .ProseMirror pre code { color: inherit; background-color: transparent; padding: 0; }
+            .ProseMirror blockquote { border-left: 2px solid #f59e0b; padding-left: 1rem; font-style: italic; color: #a1998f; }
+            .ProseMirror img { max-width: 100%; height: auto; border-radius: 0.5rem; border: 1px solid #2a2622; }
+            .ProseMirror img.ProseMirror-selectednode { outline: 2px solid #f59e0b; }
             .ProseMirror h1 { font-size: 2em; font-weight: 800; margin-top: 1.5em; margin-bottom: 0.5em; color: white; line-height: 1.2; }
             .ProseMirror h2 { font-size: 1.5em; font-weight: 700; margin-top: 1.5em; margin-bottom: 0.5em; color: #f3f4f6; line-height: 1.3; }
             .ProseMirror h3 { font-size: 1.25em; font-weight: 600; margin-top: 1em; margin-bottom: 0.5em; color: #e5e7eb; line-height: 1.4; }
-            
             .ProseMirror ul, .ProseMirror ol { padding-left: 1.5rem; margin-bottom: 1rem; list-style-position: outside; }
             .ProseMirror ul { list-style-type: disc; }
             .ProseMirror ol { list-style-type: decimal; }
             .ProseMirror li { margin-bottom: 0.25rem; }
-            
             .ProseMirror strong, .ProseMirror b { font-weight: 700; color: #fff; }
             .ProseMirror em, .ProseMirror i { font-style: italic; color: #d1d5db; }
-            
             .ProseMirror p { margin-bottom: 1rem; line-height: 1.75; }
-            .ProseMirror a { color: #60a5fa; text-decoration: underline; text-underline-offset: 4px; }
-            .ProseMirror hr { margin: 2rem 0; border: 0; border-top: 1px solid #374151; }
+            .ProseMirror a { color: #fbbf24; text-decoration: underline; text-underline-offset: 4px; }
+            .ProseMirror hr { margin: 2rem 0; border: 0; border-top: 1px solid #2a2622; }
         </style>
 
-        {{-- ADVANCED CONFIGURATION SECTION --}}
-        <div class="border-t-2 border-dashed border-gray-800 pt-8 mt-12 mb-8">
-            <h3 class="text-lg font-mono text-white mb-6 uppercase tracking-wider flex items-center gap-2">
-                <span class="text-primary-500">>></span> CONFIGURATION_PROTOCOLS
-            </h3>
-            
-            <div class="space-y-4">
-                {{-- SEO Accordion --}}
-                <details class="group bg-[#0a0a0a] border border-gray-800 rounded overflow-hidden open:ring-1 open:ring-primary-500/50">
-                    <summary class="flex items-center justify-between p-4 cursor-pointer select-none bg-gray-900/30 hover:bg-gray-900/50 transition-colors">
-                        <span class="font-mono text-sm text-gray-300 flex items-center gap-2">
-                            <svg class="w-4 h-4 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-                            SEO_OPTIMIZATION
-                        </span>
-                        <svg class="w-4 h-4 text-gray-500 group-open:rotate-180 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                    </summary>
-                    <div class="p-6 border-t border-gray-800 grid grid-cols-1 gap-6">
+        {{-- Advanced --}}
+        <div class="space-y-3 border-t border-[#221f1c] pt-8">
+            <h3 class="mb-2 text-sm font-semibold text-white">Search &amp; social</h3>
+
+            {{-- SEO --}}
+            <details class="group overflow-hidden rounded-xl border border-[#272320] bg-[#111010]">
+                <summary class="flex cursor-pointer select-none items-center justify-between p-4 text-sm text-zinc-300 [&::-webkit-details-marker]:hidden">
+                    <span class="flex items-center gap-2">
+                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path stroke-linecap="round" d="m21 21-4.3-4.3"/></svg>
+                        SEO optimization
+                    </span>
+                    <svg class="text-zinc-500 transition-transform group-open:rotate-180" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="m6 9 6 6 6-6"/></svg>
+                </summary>
+                <div class="grid grid-cols-1 gap-5 border-t border-[#221f1c] p-5">
+                    <div>
+                        <label class="mb-1.5 block font-mono text-xs uppercase tracking-wider text-zinc-500">Meta title <span class="normal-case text-zinc-600">(search result title)</span> <span id="meta-title-count" class="float-right text-[10px] text-zinc-600">{{ strlen(old('meta_title', $post->meta_title ?? '')) }}/60</span></label>
+                        <input type="text" name="meta_title" id="meta_title" maxlength="60" value="{{ old('meta_title', $post->meta_title ?? '') }}" class="w-full rounded-lg border border-[#2a2622] bg-[#0a0a0a] p-2.5 text-xs text-zinc-300 focus:border-amber-600 focus:outline-none" placeholder="Defaults to the post title">
+                    </div>
+                    <div>
+                        <label class="mb-1.5 block font-mono text-xs uppercase tracking-wider text-zinc-500">Meta description <span class="normal-case text-zinc-600">(search snippet)</span> <span id="meta-desc-count" class="float-right text-[10px] text-zinc-600">{{ strlen(old('meta_description', $post->meta_description ?? '')) }}/160</span></label>
+                        <textarea name="meta_description" id="meta_description" rows="2" maxlength="160" class="w-full rounded-lg border border-[#2a2622] bg-[#0a0a0a] p-2.5 text-xs text-zinc-300 focus:border-amber-600 focus:outline-none" placeholder="Defaults to the excerpt">{{ old('meta_description', $post->meta_description ?? '') }}</textarea>
+                    </div>
+                    <div class="grid grid-cols-1 gap-5 md:grid-cols-2">
                         <div>
-                            <label class="block text-xs font-mono text-gray-500 mb-1 ml-1">META_TITLE <span class="text-gray-600">(Title displayed in search engine results)</span> <span id="meta-title-count" class="float-right text-[10px] text-gray-600">{{ strlen(old('meta_title', $post->meta_title ?? '')) }}/60</span></label>
-                            <input type="text" name="meta_title" id="meta_title" maxlength="60" value="{{ old('meta_title', $post->meta_title ?? '') }}" class="w-full bg-[#050505] border border-gray-800 rounded p-2 text-gray-300 text-xs font-mono focus:border-primary-500 outline-none" placeholder="Default: Same as transmission title">
+                            <label class="mb-1.5 block font-mono text-xs uppercase tracking-wider text-zinc-500">Meta keywords</label>
+                            <input type="text" name="meta_keywords" value="{{ old('meta_keywords', $post->meta_keywords ?? '') }}" class="w-full rounded-lg border border-[#2a2622] bg-[#0a0a0a] p-2.5 text-xs text-zinc-300 focus:border-amber-600 focus:outline-none" placeholder="laravel, php, databases">
                         </div>
                         <div>
-                            <label class="block text-xs font-mono text-gray-500 mb-1 ml-1">META_DESCRIPTION <span class="text-gray-600">(Summary for search snippets)</span> <span id="meta-desc-count" class="float-right text-[10px] text-gray-600">{{ strlen(old('meta_description', $post->meta_description ?? '')) }}/160</span></label>
-                            <textarea name="meta_description" id="meta_description" rows="2" maxlength="160" class="w-full bg-[#050505] border border-gray-800 rounded p-2 text-gray-300 text-xs font-mono focus:border-primary-500 outline-none" placeholder="Default: Same as transmission summary">{{ old('meta_description', $post->meta_description ?? '') }}</textarea>
-                        </div>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div>
-                                <label class="block text-xs font-mono text-gray-500 mb-1 ml-1">META_KEYWORDS</label>
-                                <input type="text" name="meta_keywords" value="{{ old('meta_keywords', $post->meta_keywords ?? '') }}" class="w-full bg-[#050505] border border-gray-800 rounded p-2 text-gray-300 text-xs font-mono focus:border-primary-500 outline-none" placeholder="e.g. laravel, php, code">
+                            <label class="mb-1.5 block font-mono text-xs uppercase tracking-wider text-zinc-500">
+                                Canonical URL
+                                <span id="canonical-lock-badge" class="ml-1 text-[10px] text-emerald-500">[auto]</span>
+                            </label>
+                            <div class="flex gap-1.5">
+                                <input type="text" name="canonical_url" id="canonical_url" value="{{ old('canonical_url', $post->canonical_url ?? '') }}" readonly
+                                       class="flex-1 rounded-lg border border-[#2a2622] bg-[#0a0a0a] p-2.5 text-xs text-zinc-300 focus:border-amber-600 focus:outline-none"
+                                       placeholder="https://blog.sourav.dev/posts/slug">
+                                <button type="button" id="canonical-unlock-btn" onclick="toggleCanonicalLock()"
+                                        class="rounded-lg border border-[#2a2622] px-2.5 py-1 text-[11px] text-zinc-500 transition-colors hover:border-amber-600 hover:text-amber-400" title="Unlock to edit">🔒</button>
                             </div>
-                            <div>
-                                <label class="block text-xs font-mono text-gray-500 mb-1 ml-1">
-                                    CANONICAL_URL
-                                    <span id="canonical-lock-badge" class="ml-1 text-[10px] text-green-500">[AUTO]</span>
+                            <p class="mt-1 text-[10px] text-zinc-600">Auto-synced from the slug. Unlock to override.</p>
+                            @error('canonical_url') <p class="mt-1 text-xs text-red-500">{{ $message }}</p> @enderror
+                        </div>
+                    </div>
+                </div>
+            </details>
+
+            {{-- Social --}}
+            <details class="group overflow-hidden rounded-xl border border-[#272320] bg-[#111010]">
+                <summary class="flex cursor-pointer select-none items-center justify-between p-4 text-sm text-zinc-300 [&::-webkit-details-marker]:hidden">
+                    <span class="flex items-center gap-2">
+                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path stroke-linecap="round" d="m8.6 13.5 6.8 4M15.4 6.5l-6.8 4"/></svg>
+                        Social share card (Open Graph)
+                    </span>
+                    <svg class="text-zinc-500 transition-transform group-open:rotate-180" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="m6 9 6 6 6-6"/></svg>
+                </summary>
+                <div class="grid grid-cols-1 gap-5 border-t border-[#221f1c] p-5">
+                    <div class="grid grid-cols-1 gap-5 md:grid-cols-2">
+                        <div>
+                            <label class="mb-1.5 block font-mono text-xs uppercase tracking-wider text-zinc-500">OG title <span id="og-title-count" class="float-right text-[10px] text-zinc-600">{{ strlen(old('og_title', $post->og_title ?? '')) }}/60</span></label>
+                            <input type="text" name="og_title" id="og_title" maxlength="60" value="{{ old('og_title', $post->og_title ?? '') }}" class="w-full rounded-lg border border-[#2a2622] bg-[#0a0a0a] p-2.5 text-xs text-zinc-300 focus:border-amber-600 focus:outline-none" placeholder="Override for social cards">
+                        </div>
+                        <div>
+                            <label class="mb-1.5 block font-mono text-xs uppercase tracking-wider text-zinc-500">OG image</label>
+
+                            <input type="hidden" name="og_image" id="og_image_value" value="{{ old('og_image', $post->og_image ?? '') }}">
+                            <input type="hidden" name="og_image_r2_key" id="og_image_r2_key" value="{{ old('og_image_r2_key', $post->og_image_r2_key ?? '') }}">
+
+                            <div id="og-preview" class="{{ (isset($post->og_image) && $post->og_image) ? '' : 'hidden' }} relative mb-2">
+                                <img id="og-preview-img" src="{{ $post->og_image ?? '' }}" class="h-20 w-full rounded-lg border border-[#2a2622] object-cover opacity-90">
+                                <div class="absolute bottom-0 left-0 w-full truncate bg-black/70 px-2 py-0.5 font-mono text-[10px] text-white" id="og-preview-name">{{ $post->og_image ? basename($post->og_image) : '' }}</div>
+                                <button type="button" onclick="clearOgImage()" class="absolute right-1 top-1 grid h-5 w-5 place-items-center rounded bg-red-700 text-xs font-bold leading-none text-white hover:bg-red-500">×</button>
+                            </div>
+
+                            <div class="relative">
+                                <label for="og_image_file" class="flex w-full cursor-pointer items-center gap-2 rounded-lg border border-dashed border-[#2a2622] bg-[#0a0a0a] px-3 py-2 font-mono text-xs text-zinc-500 transition-colors hover:border-amber-600 hover:bg-[#131211]">
+                                    <span id="og-upload-icon">↑</span>
+                                    <span id="og-upload-label">Upload OG image</span>
                                 </label>
-                                <div class="flex gap-1">
-                                    <input type="text"
-                                           name="canonical_url"
-                                           id="canonical_url"
-                                           value="{{ old('canonical_url', $post->canonical_url ?? '') }}"
-                                           class="flex-1 bg-[#050505] border border-gray-800 rounded p-2 text-gray-300 text-xs font-mono focus:border-primary-500 outline-none"
-                                           placeholder="https://blog.sourav.dev/posts/slug"
-                                           readonly>
-                                    <button type="button" id="canonical-unlock-btn"
-                                            onclick="toggleCanonicalLock()"
-                                            class="px-2 py-1 text-[11px] font-mono border border-gray-700 rounded text-gray-500 hover:text-yellow-400 hover:border-yellow-600 transition-colors"
-                                            title="Unlock to edit manually">
-                                        🔒
-                                    </button>
+                                <input type="file" id="og_image_file" class="sr-only" accept="image/*">
+                                <div id="og-upload-loader" class="absolute inset-0 hidden items-center justify-center gap-2 rounded-lg bg-[#0a0a0a]/90 flex">
+                                    <svg class="h-4 w-4 animate-spin text-amber-400" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg>
+                                    <span class="font-mono text-xs text-amber-400">Uploading…</span>
                                 </div>
-                                <p class="text-[10px] text-gray-700 mt-1 font-mono">Auto-synced from slug. Click 🔒 to override manually.</p>
-                                @error('canonical_url') <p class="text-red-500 text-xs mt-1 font-mono">{{ $message }}</p> @enderror
                             </div>
+                            <p id="og-upload-status" class="mt-1 hidden font-mono text-xs"></p>
                         </div>
                     </div>
-                </details>
-
-                {{-- Social Accordion --}}
-                <details class="group bg-[#0a0a0a] border border-gray-800 rounded overflow-hidden open:ring-1 open:ring-primary-500/50">
-                    <summary class="flex items-center justify-between p-4 cursor-pointer select-none bg-gray-900/30 hover:bg-gray-900/50 transition-colors">
-                        <span class="font-mono text-sm text-gray-300 flex items-center gap-2">
-                            <svg class="w-4 h-4 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"></path></svg>
-                            SOCIAL_GRAPH_PROTOCOL (OG)
-                        </span>
-                        <svg class="w-4 h-4 text-gray-500 group-open:rotate-180 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                    </summary>
-                    <div class="p-6 border-t border-gray-800 grid grid-cols-1 gap-6">
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div>
-                                <label class="block text-xs font-mono text-gray-500 mb-1 ml-1">OG_TITLE <span class="text-gray-600">(Social Media Title)</span> <span id="og-title-count" class="float-right text-[10px] text-gray-600">{{ strlen(old('og_title', $post->og_title ?? '')) }}/60</span></label>
-                                <input type="text" name="og_title" id="og_title" maxlength="60" value="{{ old('og_title', $post->og_title ?? '') }}" class="w-full bg-[#050505] border border-gray-800 rounded p-2 text-gray-300 text-xs font-mono focus:border-primary-500 outline-none" placeholder="Override for social cards">
-                            </div>
-                            <div>
-                                <label class="block text-xs font-mono text-gray-500 mb-1 ml-1">OG_IMAGE (Social Card Image)</label>
-
-                                {{-- Hidden inputs: populated by JS after AJAX upload --}}
-                                <input type="hidden" name="og_image"       id="og_image_value"   value="{{ old('og_image',       $post->og_image       ?? '') }}">
-                                <input type="hidden" name="og_image_r2_key" id="og_image_r2_key" value="{{ old('og_image_r2_key', $post->og_image_r2_key ?? '') }}">
-
-                                {{-- Preview: visible when an image exists --}}
-                                <div id="og-preview" class="{{ (isset($post->og_image) && $post->og_image) ? '' : 'hidden' }} mb-2 relative">
-                                    <img id="og-preview-img" src="{{ $post->og_image ?? '' }}"
-                                         class="w-full h-20 object-cover rounded border border-gray-700 opacity-80">
-                                    <div class="absolute bottom-0 left-0 bg-black/70 px-2 py-0.5 text-[10px] text-white font-mono w-full truncate" id="og-preview-name">
-                                        {{ $post->og_image ? basename($post->og_image) : '' }}
-                                    </div>
-                                    <button type="button" onclick="clearOgImage()"
-                                            class="absolute top-1 right-1 w-5 h-5 bg-red-700 hover:bg-red-500 rounded text-white text-xs flex items-center justify-center font-bold leading-none">×</button>
-                                </div>
-
-                                {{-- Upload zone --}}
-                                <div class="relative">
-                                    <label for="og_image_file"
-                                           class="flex items-center gap-2 w-full px-3 py-2 bg-[#050505] border border-dashed border-gray-700 rounded cursor-pointer hover:border-primary-500 hover:bg-[#111] transition-colors text-gray-500 text-xs font-mono">
-                                        <span id="og-upload-icon">▲</span>
-                                        <span id="og-upload-label">ATTACH_OG_IMAGE</span>
-                                    </label>
-                                    <input type="file" id="og_image_file" class="sr-only" accept="image/*">
-                                    {{-- Spinner --}}
-                                    <div id="og-upload-loader" class="absolute inset-0 bg-[#050505]/90 rounded flex items-center justify-center gap-2">
-                                        <svg class="animate-spin w-4 h-4 text-primary-400" fill="none" viewBox="0 0 24 24">
-                                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
-                                        </svg>
-                                        <span class="text-xs font-mono text-primary-400">UPLOADING...</span>
-                                    </div>
-                                </div>
-                                <p id="og-upload-status" class="hidden mt-1 text-xs font-mono"></p>
-                            </div>
-                        </div>
-                        <div>
-                            <label class="block text-xs font-mono text-gray-500 mb-1 ml-1">OG_DESCRIPTION <span class="text-gray-600">(Social Media Description)</span> <span id="og-desc-count" class="float-right text-[10px] text-gray-600">{{ strlen(old('og_description', $post->og_description ?? '')) }}/160</span></label>
-                            <textarea name="og_description" id="og_description" rows="2" maxlength="160" class="w-full bg-[#050505] border border-gray-800 rounded p-2 text-gray-300 text-xs font-mono focus:border-primary-500 outline-none" placeholder="Override for social cards">{{ old('og_description', $post->og_description ?? '') }}</textarea>
-                        </div>
+                    <div>
+                        <label class="mb-1.5 block font-mono text-xs uppercase tracking-wider text-zinc-500">OG description <span id="og-desc-count" class="float-right text-[10px] text-zinc-600">{{ strlen(old('og_description', $post->og_description ?? '')) }}/160</span></label>
+                        <textarea name="og_description" id="og_description" rows="2" maxlength="160" class="w-full rounded-lg border border-[#2a2622] bg-[#0a0a0a] p-2.5 text-xs text-zinc-300 focus:border-amber-600 focus:outline-none" placeholder="Override for social cards">{{ old('og_description', $post->og_description ?? '') }}</textarea>
                     </div>
-                </details>
-            </div>
+                </div>
+            </details>
         </div>
-
     </div>
 
-    {{-- Right Column: Settings --}}
-    <div class="xl:col-span-1 space-y-6">
-        
-        {{-- Status Card --}}
-        <div class="bg-[#0a0a0a]/80 backdrop-blur border border-gray-800 rounded-lg p-5">
-            <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4 border-b border-gray-800 pb-2">
-                // SYSTEM_CONTROLS
-            </h3>
-            
-            {{-- Publish Toggle --}}
-            <div class="flex items-center justify-between mb-6">
-                <span class="text-sm text-gray-300 font-mono">BROADCAST_STATUS</span>
-                <label class="relative inline-flex items-center cursor-pointer">
-                    <input type="checkbox" name="is_published" value="1" class="sr-only peer" {{ old('is_published', $post->is_published ?? false) ? 'checked' : '' }}>
-                    <div class="w-11 h-6 bg-gray-800 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-primary-500 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-gray-400 after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600 peer-checked:after:bg-white"></div>
+    {{-- ── Right: settings ──────────────────────────────────────────────────── --}}
+    <div class="space-y-6 xl:col-span-1">
+
+        {{-- Publish --}}
+        <div class="panel p-5">
+            <h3 class="mb-4 border-b border-[#221f1c] pb-3 text-xs font-semibold uppercase tracking-widest text-zinc-400">Publish</h3>
+            <div class="mb-5 flex items-center justify-between">
+                <div>
+                    <span class="block text-sm text-zinc-200">Published</span>
+                    <span class="text-xs text-zinc-500">Visible to everyone</span>
+                </div>
+                <label class="relative inline-flex cursor-pointer items-center">
+                    <input type="checkbox" name="is_published" value="1" class="peer sr-only" {{ old('is_published', $post->is_published ?? false) ? 'checked' : '' }}>
+                    <div class="h-6 w-11 rounded-full bg-[#2a2622] after:absolute after:left-0.5 after:top-0.5 after:h-5 after:w-5 after:rounded-full after:bg-zinc-400 after:transition-all after:content-[''] peer-checked:bg-emerald-600 peer-checked:after:translate-x-full peer-checked:after:bg-white peer-focus:ring-2 peer-focus:ring-emerald-600/40"></div>
                 </label>
             </div>
-
-            <button type="submit" class="w-full group relative inline-flex items-center justify-center px-4 py-3 font-mono text-sm font-bold text-black transition-all duration-200 bg-primary-500 rounded hover:bg-primary-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 focus:ring-offset-[#050505]">
-                <span class="absolute right-3 opacity-0 group-hover:opacity-100 transition-opacity">-></span>
-                {{ $method === 'POST' ? 'INITIATE_UPLOAD' : 'UPDATE_TRANSMISSION' }}
+            <button type="submit" class="btn-brand flex w-full items-center justify-center gap-2 rounded-lg px-4 py-3 text-sm font-semibold">
+                {{ $method === 'POST' ? 'Create post' : 'Save changes' }}
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M12 5l7 7-7 7"/></svg>
             </button>
-            
             @if(isset($post) && $post->exists)
-                 <div class="mt-4 pt-4 border-t border-gray-800 text-center">
-                    <a href="{{ route('admin.posts.index') }}" class="text-xs text-red-500 hover:text-red-400 font-mono hover:underline">
-                        [ ABORT_EDIT ]
-                    </a>
+                <div class="mt-4 border-t border-[#221f1c] pt-4 text-center">
+                    <a href="{{ route('admin.posts.index') }}" class="text-xs text-zinc-500 transition-colors hover:text-white">Cancel</a>
                 </div>
             @endif
         </div>
 
-        {{-- Classifications --}}
-        <div class="bg-[#0a0a0a] border border-gray-800 rounded-lg p-5">
-             <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4 border-b border-gray-800 pb-2 flex justify-between items-center">
-                <span>// CLASSIFICATION</span>
-                <span class="text-[10px] text-gray-600 font-mono">01</span>
-            </h3>
-            
-            <div class="group">
-                <label class="block text-xs font-mono text-gray-500 mb-1 ml-1 group-focus-within:text-primary-400 transition-colors">TAG_INDEX</label>
-                
-                {{-- Hidden input stores the actual comma-separated values sent to server --}}
-                <input type="hidden" name="tags" id="tags_hidden" 
-                       value="{{ old('tags', isset($post) && $post->exists ? $post->tags->pluck('name')->implode(',') : '') }}">
+        {{-- Tags --}}
+        <div class="panel p-5">
+            <h3 class="mb-4 border-b border-[#221f1c] pb-3 text-xs font-semibold uppercase tracking-widest text-zinc-400">Tags</h3>
 
-                {{-- Visual container for selected tags --}}
-                <div id="tags_container" class="flex flex-wrap gap-2 mb-3 min-h-7.5 p-2 bg-[#050505] border border-gray-800 rounded">
-                    {{-- Tags will be injected here by JS --}}
-                </div>
+            <input type="hidden" name="tags" id="tags_hidden" value="{{ old('tags', isset($post) && $post->exists ? $post->tags->pluck('name')->implode(',') : '') }}">
 
-                <div class="flex flex-col gap-2">
-                    {{-- Dropdown for existing tags --}}
-                    <select id="tags_select" class="w-full bg-[#050505] border border-gray-800 rounded p-2 text-gray-300 text-xs font-mono focus:border-primary-500 outline-none">
-                        <option value="">[ SELECT_EXISTING_TAG ]</option>
-                        @foreach($allTags as $tag)
-                            <option value="{{ $tag->name }}">{{ $tag->name }}</option>
-                        @endforeach
-                    </select>
+            <div id="tags_container" class="mb-3 flex min-h-8 flex-wrap gap-2 rounded-lg border border-[#2a2622] bg-[#0a0a0a] p-2"></div>
 
-                    {{-- Manual entry + Add Button --}}
-                    <div class="flex gap-2">
-                        <input type="text" id="tags_input" 
-                               class="flex-1 bg-[#050505] border border-gray-800 rounded p-2 text-gray-300 text-xs font-mono focus:border-primary-500 outline-none placeholder-gray-700"
-                               placeholder="Or type new tag..."
-                               onkeydown="if(event.key === 'Enter'){ event.preventDefault(); addTag(); }">
-                        
-                        <button type="button" onclick="addTag()" 
-                                class="px-3 py-1 bg-gray-800 hover:bg-primary-500 hover:text-black text-gray-300 text-xs font-mono rounded transition-colors border border-gray-700">
-                           + ADD
-                        </button>
-                    </div>
+            <div class="flex flex-col gap-2">
+                <select id="tags_select" class="w-full rounded-lg border border-[#2a2622] bg-[#0a0a0a] p-2.5 text-xs text-zinc-300 focus:border-amber-600 focus:outline-none">
+                    <option value="">Select an existing tag…</option>
+                    @foreach($allTags as $tag)
+                        <option value="{{ $tag->name }}">{{ $tag->name }}</option>
+                    @endforeach
+                </select>
+                <div class="flex gap-2">
+                    <input type="text" id="tags_input" class="flex-1 rounded-lg border border-[#2a2622] bg-[#0a0a0a] p-2.5 text-xs text-zinc-300 placeholder:text-zinc-600 focus:border-amber-600 focus:outline-none" placeholder="Or type a new tag…"
+                           onkeydown="if(event.key === 'Enter'){ event.preventDefault(); addTag(); }">
+                    <button type="button" onclick="addTag()" class="rounded-lg border border-[#2a2622] bg-[#1a1815] px-3 py-1 text-xs text-zinc-300 transition-colors hover:bg-amber-500 hover:text-black">Add</button>
                 </div>
             </div>
         </div>
 
-        {{-- Media Assets --}}
-        <div class="bg-[#0a0a0a] border border-gray-800 rounded-lg p-5">
-             <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4 border-b border-gray-800 pb-2 flex justify-between items-center">
-                <span>// MEDIA_ASSETS</span>
-                <span class="text-[10px] text-gray-600 font-mono">ATTACH</span>
-            </h3>
-            
+        {{-- Cover image --}}
+        <div class="panel p-5">
+            <h3 class="mb-4 border-b border-[#221f1c] pb-3 text-xs font-semibold uppercase tracking-widest text-zinc-400">Cover image</h3>
+
             <div class="space-y-4">
-                <div class="group">
-                    <label class="block text-xs font-mono text-gray-500 mb-1 ml-1 group-focus-within:text-primary-400 transition-colors">PRIMARY_COVER_IMAGE</label>
-                    
-                    {{-- Hidden inputs: JS fills these after the AJAX upload completes --}}
-                    <input type="hidden" name="cover_image"      id="cover_image_value"   value="{{ old('cover_image',       $post->cover_image       ?? '') }}">
+                <div>
+                    <input type="hidden" name="cover_image" id="cover_image_value" value="{{ old('cover_image', $post->cover_image ?? '') }}">
                     <input type="hidden" name="cover_image_r2_key" id="cover_image_r2_key" value="{{ old('cover_image_r2_key', $post->cover_image_r2_key ?? '') }}">
 
-                    {{-- Preview: visible while an image URL is stored --}}
-                    <div id="cover-preview" class="{{ (isset($post->cover_image) && $post->cover_image) ? '' : 'hidden' }} mb-2 relative group/img overflow-hidden rounded border border-gray-700">
-                        {{-- cover_image is a full public R2 URL —  no asset() wrapper needed --}}
-                        <img id="cover-preview-img" src="{{ $post->cover_image ?? '' }}"
-                             class="w-full h-32 object-cover opacity-70 group-hover/img:opacity-100 transition-opacity">
-                        <div class="absolute bottom-0 left-0 bg-black/70 px-2 py-0.5 text-[10px] text-white font-mono w-full truncate" id="cover-preview-name">
-                            {{ $post->cover_image ? basename($post->cover_image) : '' }}
-                        </div>
-                        <button type="button" onclick="clearCoverImage()"
-                                class="absolute top-1 right-1 w-5 h-5 bg-red-700 hover:bg-red-500 rounded text-white text-xs flex items-center justify-center font-bold leading-none">×</button>
+                    <div id="cover-preview" class="{{ (isset($post->cover_image) && $post->cover_image) ? '' : 'hidden' }} group/img relative mb-2 overflow-hidden rounded-lg border border-[#2a2622]">
+                        <img id="cover-preview-img" src="{{ $post->cover_image ?? '' }}" class="h-32 w-full object-cover opacity-80 transition-opacity group-hover/img:opacity-100">
+                        <div class="absolute bottom-0 left-0 w-full truncate bg-black/70 px-2 py-0.5 font-mono text-[10px] text-white" id="cover-preview-name">{{ $post->cover_image ? basename($post->cover_image) : '' }}</div>
+                        <button type="button" onclick="clearCoverImage()" class="absolute right-1 top-1 grid h-5 w-5 place-items-center rounded bg-red-700 text-xs font-bold leading-none text-white hover:bg-red-500">×</button>
                     </div>
 
-                    {{-- Upload zone: click to select, progress shown inline --}}
                     <div class="relative">
-                        <label for="cover_image_file"
-                               class="flex items-center gap-2 w-full px-3 py-2.5 bg-[#050505] border border-dashed border-gray-700 rounded cursor-pointer hover:border-primary-500 hover:bg-[#111] transition-colors text-gray-500 text-xs font-mono">
-                            <span id="cover-upload-icon">▲</span>
-                            <span id="cover-upload-label">ATTACH_IMAGE_FILE</span>
+                        <label for="cover_image_file" class="flex w-full cursor-pointer items-center gap-2 rounded-lg border border-dashed border-[#2a2622] bg-[#0a0a0a] px-3 py-2.5 font-mono text-xs text-zinc-500 transition-colors hover:border-amber-600 hover:bg-[#131211]">
+                            <span id="cover-upload-icon">↑</span>
+                            <span id="cover-upload-label">Upload cover image</span>
                         </label>
                         <input type="file" id="cover_image_file" class="sr-only" accept="image/*">
-
-                        {{-- Loader overlay shown while the file is uploading to R2 --}}
-                        <div id="cover-upload-loader" class="hidden absolute inset-0 bg-[#050505]/90 rounded flex items-center justify-center gap-2">
-                            <svg class="animate-spin w-4 h-4 text-primary-400" fill="none" viewBox="0 0 24 24">
-                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
-                            </svg>
-                            <span class="text-xs font-mono text-primary-400">UPLOADING_TO_R2...</span>
+                        <div id="cover-upload-loader" class="absolute inset-0 hidden items-center justify-center gap-2 rounded-lg bg-[#0a0a0a]/90 flex">
+                            <svg class="h-4 w-4 animate-spin text-amber-400" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg>
+                            <span class="font-mono text-xs text-amber-400">Uploading…</span>
                         </div>
                     </div>
-                    {{-- Upload result: checkmark on success, red message on error --}}
-                    <p id="cover-upload-status" class="hidden mt-1 text-xs font-mono"></p>
-                    <label class="block text-xs font-mono text-gray-500 mb-1 ml-1 group-focus-within:text-primary-400 transition-colors">IMAGE_ALT_TEXT</label>
-                    <input type="text" name="cover_image_alt" value="{{ old('cover_image_alt', $post->cover_image_alt ?? '') }}" class="w-full bg-[#050505] border border-gray-800 rounded p-2 text-gray-300 text-xs font-mono focus:border-primary-500 outline-none" placeholder="Description for screen readers">
-                    @error('cover_image_alt') <p class="text-red-500 text-xs mt-1 font-mono">{{ $message }}</p> @enderror
+                    <p id="cover-upload-status" class="mt-1 hidden font-mono text-xs"></p>
+
+                    <label class="mb-1.5 mt-3 block font-mono text-xs uppercase tracking-wider text-zinc-500">Alt text</label>
+                    <input type="text" name="cover_image_alt" value="{{ old('cover_image_alt', $post->cover_image_alt ?? '') }}" class="w-full rounded-lg border border-[#2a2622] bg-[#0a0a0a] p-2.5 text-xs text-zinc-300 focus:border-amber-600 focus:outline-none" placeholder="Describe the image for screen readers">
+                    @error('cover_image_alt') <p class="mt-1 text-xs text-red-500">{{ $message }}</p> @enderror
                 </div>
-                
-                 <div class="group">
-                    <label class="block text-xs font-mono text-gray-500 mb-1 ml-1 group-focus-within:text-primary-400 transition-colors">IMAGE_CAPTION</label>
-                    <input type="text" name="cover_image_caption" value="{{ old('cover_image_caption', $post->cover_image_caption ?? '') }}" class="w-full bg-[#050505] border border-gray-800 rounded p-2 text-gray-300 text-xs font-mono focus:border-primary-500 outline-none" placeholder="Visible caption text">
-                    @error('cover_image_caption') <p class="text-red-500 text-xs mt-1 font-mono">{{ $message }}</p> @enderror
+
+                <div>
+                    <label class="mb-1.5 block font-mono text-xs uppercase tracking-wider text-zinc-500">Caption</label>
+                    <input type="text" name="cover_image_caption" value="{{ old('cover_image_caption', $post->cover_image_caption ?? '') }}" class="w-full rounded-lg border border-[#2a2622] bg-[#0a0a0a] p-2.5 text-xs text-zinc-300 focus:border-amber-600 focus:outline-none" placeholder="Visible caption text">
+                    @error('cover_image_caption') <p class="mt-1 text-xs text-red-500">{{ $message }}</p> @enderror
                 </div>
             </div>
         </div>
-
     </div>
 </div>
 
@@ -443,8 +304,8 @@
         canonicalLocked = !canonicalLocked;
         canonicalInput.readOnly = canonicalLocked;
         unlockBtn.textContent   = canonicalLocked ? '🔒' : '🔓';
-        lockBadge.textContent   = canonicalLocked ? '[AUTO]' : '[MANUAL]';
-        lockBadge.className     = 'ml-1 text-[10px] ' + (canonicalLocked ? 'text-green-500' : 'text-yellow-400');
+        lockBadge.textContent   = canonicalLocked ? '[auto]' : '[manual]';
+        lockBadge.className     = 'ml-1 text-[10px] ' + (canonicalLocked ? 'text-emerald-500' : 'text-amber-400');
         if (canonicalLocked) syncCanonical(slugInput.value);
         if (!canonicalLocked) canonicalInput.focus();
     }
@@ -476,52 +337,24 @@
             canonicalLocked = false;
             canonicalInput.readOnly = false;
             unlockBtn.textContent   = '🔓';
-            lockBadge.textContent   = '[MANUAL]';
-            lockBadge.className     = 'ml-1 text-[10px] text-yellow-400';
+            lockBadge.textContent   = '[manual]';
+            lockBadge.className     = 'ml-1 text-[10px] text-amber-400';
         }
     })();
 
     // ─── Image Upload via AJAX ───────────────────────────────────────────────
-    //
-    // How it works:
-    //  1. User clicks the upload zone → file picker opens
-    //  2. On file selection → spinner appears over the upload zone
-    //  3. JS sends the file to POST /admin/posts/upload-image via fetch()
-    //  4. Server (PostController@uploadImage) → R2ImageService::upload()
-    //     → Cloudflare R2 bucket → returns { url, key }
-    //  5. JS hides the spinner, shows a preview image + ✓ checkmark
-    //  6. The returned URL and key are stored in hidden inputs
-    //  7. When the form is submitted, the hidden inputs are sent (not a file)
-    //     → PostController@store/update read the URL+key directly from $request
-
     const UPLOAD_URL = '{{ route("admin.posts.upload-image") }}';
 
-    /**
-     * Upload a single image file to R2 via AJAX, then update the UI.
-     *
-     * @param {object} opts
-     *   file         — the File object from the <input type="file">
-     *   imageType    — 'cover_image' or 'og_image' (tells server which R2 folder)
-     *   loaderEl     — the spinner overlay element
-     *   statusEl     — the small text element below the upload zone
-     *   previewEl    — the preview container element
-     *   previewImgEl — the <img> inside the preview
-     *   previewNameEl— the filename label inside the preview
-     *   urlInput     — hidden <input> that will receive the public URL
-     *   keyInput     — hidden <input> that will receive the R2 bucket key
-     */
     function uploadImageToR2(opts) {
         const { file, imageType, loaderEl, statusEl, previewEl,
                 previewImgEl, previewNameEl, urlInput, keyInput } = opts;
 
-        // Show spinner, hide previous status
         loaderEl.classList.remove('hidden');
         statusEl.classList.add('hidden');
 
         const fd = new FormData();
         fd.append('file', file);
         fd.append('type', imageType);
-        // Grab CSRF token from the @csrf hidden field that wraps this form
         fd.append('_token', document.querySelector('input[name="_token"]').value);
 
         fetch(UPLOAD_URL, { method: 'POST', body: fd })
@@ -529,32 +362,26 @@
             .then(data => {
                 if (!data.url) throw new Error(data.error || 'Unknown error');
 
-                // ✅ Success — populate hidden inputs so form submission carries the data
                 urlInput.value = data.url;
                 keyInput.value = data.key;
 
-                // Show preview image immediately
                 previewImgEl.src = data.url;
                 previewNameEl.textContent = data.key.split('/').pop();
                 previewEl.classList.remove('hidden');
 
-                // Show success badge
-                statusEl.textContent  = '✓ UPLOAD_COMPLETE';
-                statusEl.className    = 'mt-1 text-xs font-mono text-green-500';
+                statusEl.textContent  = '✓ Uploaded';
+                statusEl.className    = 'mt-1 text-xs font-mono text-emerald-500';
                 statusEl.classList.remove('hidden');
-                // Auto-hide after 3 seconds
                 setTimeout(() => statusEl.classList.add('hidden'), 3000);
             })
             .catch(err => {
-                // ✗ Failure — show red error, keep hidden inputs unchanged
-                statusEl.textContent  = '✗ ERROR: ' + err.message;
+                statusEl.textContent  = '✗ Error: ' + err.message;
                 statusEl.className    = 'mt-1 text-xs font-mono text-red-500';
                 statusEl.classList.remove('hidden');
             })
             .finally(() => loaderEl.classList.add('hidden'));
     }
 
-    // Bind cover image file input
     document.getElementById('cover_image_file').addEventListener('change', function () {
         if (!this.files[0]) return;
         uploadImageToR2({
@@ -570,7 +397,6 @@
         });
     });
 
-    // Bind OG image file input
     document.getElementById('og_image_file').addEventListener('change', function () {
         if (!this.files[0]) return;
         uploadImageToR2({
@@ -602,12 +428,11 @@
                 const len = this.value.length;
                 badge.textContent = len + '/' + max;
                 badge.className   = 'float-right text-[10px] ' +
-                    (len >= max ? 'text-red-500' : len >= max * 0.9 ? 'text-yellow-500' : 'text-gray-600');
+                    (len >= max ? 'text-red-500' : len >= max * 0.9 ? 'text-amber-500' : 'text-zinc-600');
             });
         });
     })();
 
-    // Clear cover image (removes preview + empties hidden inputs)
     function clearCoverImage() {
         document.getElementById('cover_image_value').value  = '';
         document.getElementById('cover_image_r2_key').value = '';
@@ -616,7 +441,6 @@
         document.getElementById('cover-upload-status').classList.add('hidden');
     }
 
-    // Clear OG image
     function clearOgImage() {
         document.getElementById('og_image_value').value   = '';
         document.getElementById('og_image_r2_key').value  = '';
@@ -626,8 +450,6 @@
     }
 
     // ─── Tag Management Logic ───────────────────────────────────────────────
-    
-    // State: Set of unique tag names
     const tagsSet = new Set();
     const tagsHiddenInput = document.getElementById('tags_hidden');
     const tagsContainer   = document.getElementById('tags_container');
@@ -637,49 +459,37 @@
     function renderTags() {
         tagsContainer.innerHTML = '';
         if (tagsSet.size === 0) {
-            tagsContainer.innerHTML = '<span class="text-gray-600 text-xs italic p-1 font-mono">// NO_TAGS_SELECTED</span>';
+            tagsContainer.innerHTML = '<span class="p-1 text-xs italic text-zinc-600">No tags yet</span>';
         } else {
             tagsSet.forEach(tag => {
                 const badge = document.createElement('span');
-                badge.className = 'inline-flex items-center gap-1 px-2 py-1 bg-gray-900 text-primary-400 text-xs font-mono rounded border border-gray-700 hover:border-red-500 transition-colors group cursor-pointer';
+                badge.className = 'inline-flex cursor-pointer items-center gap-1 rounded-md border border-[#2a2622] bg-[#1a1815] px-2 py-1 font-mono text-xs text-amber-400 transition-colors hover:border-red-500 group';
                 badge.title = 'Click to remove';
                 badge.onclick = () => removeTag(tag);
-                badge.innerHTML = `
-                    <span class="text-gray-500">#</span>${tag} 
-                    <span class="text-gray-600 group-hover:text-red-500 ml-1">×</span>
-                `;
+                badge.innerHTML = `<span class="text-zinc-500">#</span>${tag}<span class="ml-1 text-zinc-600 group-hover:text-red-500">×</span>`;
                 tagsContainer.appendChild(badge);
             });
         }
-
-        // Update hidden input sent to server
         tagsHiddenInput.value = Array.from(tagsSet).join(',');
     }
 
     function addTag() {
-        // Try getting value from select first, then text input
         const selectVal = tagsSelect.value;
         const textVal   = tagsInput.value;
-        
         let val = selectVal || textVal;
-        
+
         if (val) {
-            // Split by comma in case user pasted multiple
             val.split(',').forEach(v => {
                 const clean = v.trim();
                 if (clean) tagsSet.add(clean);
             });
-            
             renderTags();
-            
-            // Reset inputs
             tagsSelect.value = '';
             tagsInput.value = '';
-            if (textVal) tagsInput.focus(); // Keep focus if user was typing
+            if (textVal) tagsInput.focus();
         }
     }
 
-    // Initialize from hidden input (populated by PHP)
     if (tagsHiddenInput.value) {
         tagsHiddenInput.value.split(',').forEach(t => {
             const clean = t.trim();
@@ -687,32 +497,23 @@
         });
         renderTags();
     } else {
-        renderTags(); // Show empty state
+        renderTags();
     }
 
-    // Expose remove function to global scope
     window.removeTag = function(tag) {
         tagsSet.delete(tag);
         renderTags();
     };
 
-    // Auto-add when dropdown changes
     if (tagsSelect) {
         tagsSelect.addEventListener('change', function() {
-            if (this.value) {
-                addTag();
-            }
-        });
-    }
-    
-    // Allow pressing Enter in text input to add
-    if (tagsInput) {
-        tagsInput.addEventListener('keydown', function(e) {
-            if (e.key === 'Enter') {
-                e.preventDefault(); // Prevent form submission
-                addTag();
-            }
+            if (this.value) addTag();
         });
     }
 
+    if (tagsInput) {
+        tagsInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') { e.preventDefault(); addTag(); }
+        });
+    }
 </script>
